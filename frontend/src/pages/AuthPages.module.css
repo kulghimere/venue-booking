@@ -1,0 +1,261 @@
+.page {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem 1.5rem;
+  padding-top: 88px;
+  background: linear-gradient(135deg, var(--brand) 0%, #1a1d2e 60%, #0d1117 100%);
+}
+.card {
+  background: white; border-radius: var(--radius-xl);
+  padding: 2.5rem; width: 100%; max-width: 460px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.35);
+  animation: fadeIn 0.4s ease;
+}
+.cardWide { max-width: 560px; }
+
+/* ── Logo ── */
+.logoArea { text-align: center; margin-bottom: 1.5rem; }
+.logo {
+  font-family: var(--font-display); font-size: 1.3rem; font-weight: 800;
+  color: var(--brand); display: inline-flex; align-items: center; gap: 0.4rem;
+}
+.logo span { color: var(--accent); font-size: 1.5rem; }
+.card h1 { font-size: 1.6rem; text-align: center; margin-bottom: 0.3rem; }
+.subtitle { text-align: center; color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1.75rem; }
+.successIcon { font-size: 3rem; text-align: center; margin-bottom: 0.75rem; }
+
+/* ── Portal tabs ── */
+.portalTabs { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.6rem; margin-bottom: 1rem; }
+.portalTab {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 0.75rem 0.5rem; border-radius: var(--radius-md);
+  border: 1.5px solid var(--border); background: var(--surface-2);
+  cursor: pointer; transition: all 0.2s ease; font-family: var(--font-body);
+}
+.portalTab:hover { border-color: var(--text-muted); background: var(--surface-3); }
+.portalTabActive { border-color: var(--accent); background: rgba(233,69,96,0.05); }
+.portalIcon { font-size: 1.4rem; }
+.portalTab strong { font-size: 0.78rem; color: var(--text-primary); }
+.portalTab small { font-size: 0.68rem; color: var(--text-muted); text-align: center; }
+
+/* ── Portal banner ── */
+.portalBanner {
+  border-radius: var(--radius-sm); padding: 0.65rem 1rem;
+  font-size: 0.82rem; color: var(--text-secondary);
+  margin-bottom: 1.5rem; border: 1px solid var(--border);
+  background: var(--surface-2); line-height: 1.5;
+}
+.portalBanner[data-portal="admin"] { background: rgba(233,69,96,0.05); border-color: rgba(233,69,96,0.2); color: #b73050; }
+.portalBanner[data-portal="venue_owner"] { background: rgba(79,172,254,0.05); border-color: rgba(79,172,254,0.2); color: #1268a8; }
+.portalBanner a { color: var(--accent); font-weight: 600; }
+
+/* ── Form ── */
+.form { display: flex; flex-direction: column; gap: 1.1rem; }
+.formGrid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.fieldGroup { display: flex; flex-direction: column; gap: 0.35rem; }
+.fieldGroup label {
+  font-size: 0.8rem; font-weight: 600;
+  color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;
+}
+.labelRow { display: flex; align-items: center; justify-content: space-between; }
+.forgotLink { font-size: 0.78rem; color: var(--accent); font-weight: 600; }
+.forgotLink:hover { text-decoration: underline; }
+.optional { font-weight: 400; color: var(--text-muted); text-transform: none; letter-spacing: 0; font-size: 0.75rem; }
+
+.fieldGroup input, .fieldGroup select {
+  padding: 0.7rem 0.9rem; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); font-size: 0.9rem;
+  color: var(--text-primary); background: var(--surface-2);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: var(--font-body);
+}
+.fieldGroup input:focus, .fieldGroup select:focus {
+  outline: none; border-color: var(--accent); background: white;
+  box-shadow: 0 0 0 3px rgba(233,69,96,0.1);
+}
+.inputError { border-color: var(--accent) !important; background: rgba(233,69,96,0.04) !important; }
+.fieldError { font-size: 0.75rem; color: var(--accent); font-weight: 500; }
+
+/* Phone field with country code dropdown */
+.phoneWrap { display: flex; align-items: stretch; gap: 0; }
+.dialSelect {
+  flex-shrink: 0; max-width: 160px;
+  padding: 0.7rem 0.5rem; border: 1.5px solid var(--border);
+  border-right: none; border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  font-size: 0.85rem; color: var(--text-primary); background: var(--surface-2);
+  cursor: pointer; outline: none;
+  font-family: var(--font-body);
+}
+.dialSelect:focus {
+  border-color: var(--accent); background: white;
+  box-shadow: 0 0 0 3px rgba(233,69,96,0.1);
+}
+.phoneWrap input {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0 !important;
+  flex: 1; min-width: 0;
+}
+.phoneWrap input:disabled {
+  opacity: 0.5; cursor: not-allowed;
+}
+.phoneWrap input:focus { z-index: 1; }
+
+/* Password field */
+.passwordWrap { position: relative; }
+.passwordWrap input { width: 100%; padding-right: 2.75rem; }
+.eyeBtn {
+  position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; font-size: 0.95rem;
+  opacity: 0.6; transition: opacity 0.2s; padding: 2px;
+}
+.eyeBtn:hover { opacity: 1; }
+
+/* Password strength */
+.pwStrength { margin-top: 0.6rem; }
+.pwBars { display: flex; gap: 4px; margin-bottom: 4px; }
+.pwBar { height: 4px; flex: 1; border-radius: 2px; transition: background 0.3s; }
+.pwChecks { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; margin-top: 4px; }
+.pwCheck { font-size: 0.72rem; font-weight: 500; }
+
+/* Alert */
+.alertError {
+  background: rgba(233,69,96,0.08); border: 1px solid rgba(233,69,96,0.25);
+  border-radius: var(--radius-sm); padding: 0.65rem 0.9rem;
+  font-size: 0.84rem; color: #c73652; line-height: 1.5;
+}
+
+/* Submit button */
+.submitBtn {
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  width: 100%; background: var(--accent); color: white;
+  border: none; border-radius: var(--radius-md);
+  padding: 0.9rem; font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s; font-family: var(--font-body);
+  margin-top: 0.25rem;
+}
+.submitBtn:hover:not(:disabled) { background: #c73652; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(233,69,96,0.3); }
+.submitBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+.outlineBtn {
+  width: 100%; background: white; color: var(--text-secondary);
+  border: 1.5px solid var(--border); border-radius: var(--radius-md);
+  padding: 0.85rem; font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; font-family: var(--font-body);
+}
+.outlineBtn:hover { border-color: var(--text-primary); color: var(--text-primary); }
+.formActions { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 1rem; }
+
+/* Spinner */
+.spinner {
+  display: inline-block; width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3); border-top-color: white;
+  border-radius: 50%; animation: spin 0.7s linear infinite;
+}
+
+/* Role options (register) */
+.roleGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.75rem; }
+.roleOption {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  gap: 0.35rem; padding: 1.1rem 0.75rem; border-radius: var(--radius-md);
+  border: 1.5px solid var(--border); background: var(--surface-2);
+  cursor: pointer; transition: all 0.2s ease; user-select: none;
+}
+.roleOption input { display: none; }
+.roleOption:hover { border-color: var(--text-muted); }
+.roleSelected { border-color: var(--accent) !important; background: rgba(233,69,96,0.05) !important; }
+.roleEmoji { font-size: 2rem; }
+.roleOption strong { font-size: 0.85rem; color: var(--text-primary); }
+.roleOption small { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; }
+
+/* Agree checkbox */
+.agreeRow {
+  display: flex; align-items: flex-start; gap: 0.6rem;
+  cursor: pointer; font-size: 0.83rem; color: var(--text-secondary); line-height: 1.5;
+}
+.agreeRow input { width: 15px; height: 15px; cursor: pointer; margin-top: 2px; flex-shrink: 0; }
+.agreeRow a { color: var(--accent); font-weight: 600; }
+
+/* Consent box (terms + privacy) */
+.consentBox {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  background: var(--surface-2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: border-color 0.2s;
+}
+.consentBoxError {
+  border-color: var(--accent);
+  background: rgba(233,69,96,0.03);
+}
+.legalLink {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.legalLink:hover { color: #c73652; }
+.consentSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.75rem;
+  background: white;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+.consentPoint {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.consentIcon { flex-shrink: 0; font-size: 0.85rem; line-height: 1.5; }
+.consentError {
+  font-size: 0.75rem;
+  color: var(--accent);
+  font-weight: 500;
+  padding-top: 0.1rem;
+}
+
+/* Demo box */
+.demoBox {
+  margin-top: 1.5rem; background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 0.9rem 1rem;
+}
+.demoLabel { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+.demoRow { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.demoRow code { font-size: 0.78rem; color: var(--accent); background: rgba(233,69,96,0.08); padding: 2px 8px; border-radius: 5px; font-family: 'DM Mono', monospace; }
+.fillBtn {
+  background: var(--accent); color: white; border: none;
+  border-radius: 6px; padding: 3px 10px; font-size: 0.75rem;
+  font-weight: 700; cursor: pointer; margin-left: auto; transition: background 0.2s;
+  font-family: var(--font-body);
+}
+.fillBtn:hover { background: #c73652; }
+
+/* Switch line */
+.switchLine { text-align: center; font-size: 0.875rem; color: var(--text-muted); margin-top: 1.25rem; }
+.switchLine a { color: var(--accent); font-weight: 600; }
+.switchLine a:hover { text-decoration: underline; }
+
+/* Dev token box */
+.devTokenBox {
+  margin-top: 1.25rem; background: rgba(245,166,35,0.08);
+  border: 1px solid rgba(245,166,35,0.3); border-radius: var(--radius-md);
+  padding: 1rem; text-align: center;
+}
+.devLabel { font-size: 0.75rem; color: #9a6b10; font-weight: 600; margin-bottom: 0.5rem; }
+.devLink { font-size: 0.85rem; color: var(--accent); font-weight: 600; }
+
+/* Responsive */
+@media (max-width: 520px) {
+  .card, .cardWide { padding: 2rem 1.25rem; }
+  .formGrid2 { grid-template-columns: 1fr; }
+  .roleGrid { grid-template-columns: 1fr; }
+  .portalTabs { grid-template-columns: repeat(3,1fr); }
+  .portalTab strong { font-size: 0.72rem; }
+  .portalTab small { display: none; }
+}
