@@ -1,0 +1,103 @@
+.page { padding-top: 68px; }
+.loadingPage { padding-top: 68px; }
+.loadingInner { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+.skeletonHero { height: 480px; border-radius: 0; margin-bottom: 2rem; }
+.skeletonBody { padding: 0 1.5rem; }
+.skeletonTitle { height: 36px; width: 60%; margin-bottom: 1rem; }
+.skeletonText { height: 18px; margin-bottom: 0.75rem; }
+.notFound { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 1rem; }
+.hero { position: relative; height: 480px; overflow: hidden; }
+.heroImg { width: 100%; height: 100%; object-fit: cover; }
+.heroPlaceholder { width: 100%; height: 100%; background: var(--brand); display: flex; align-items: center; justify-content: center; }
+.heroOverlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 60%, transparent 100%); }
+.heroBreadcrumb { position: absolute; top: 1.5rem; left: 1.5rem; color: rgba(255,255,255,0.7); font-size: 0.85rem; }
+.heroBreadcrumb a { color: rgba(255,255,255,0.7); } .heroBreadcrumb a:hover { color: white; }
+.heroInfo { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); width: 100%; max-width: 1200px; padding: 0 1.5rem; }
+.heroBadge { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.15); backdrop-filter: blur(8px); color: white; font-size: 0.8rem; font-weight: 600; padding: 4px 12px; border-radius: 20px; margin-bottom: 0.75rem; text-transform: capitalize; }
+.heroTitle { font-size: 2.5rem; color: white; margin-bottom: 0.75rem; font-weight: 800; }
+.heroMeta { display: flex; flex-wrap: wrap; gap: 1.25rem; }
+.heroMeta span { color: rgba(255,255,255,0.8); font-size: 0.9rem; }
+.layout { display: grid; grid-template-columns: 1fr 340px; gap: 3rem; padding: 3rem 0 5rem; }
+.main { display: flex; flex-direction: column; gap: 2.5rem; }
+.section h2 { font-size: 1.25rem; margin-bottom: 1.25rem; color: var(--text-primary); }
+.section p { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.8; }
+.amenitiesGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+.amenity { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.6rem 0.9rem; font-size: 0.875rem; color: var(--text-secondary); font-weight: 500; }
+.rulesList { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.rulesList li { font-size: 0.9rem; color: var(--text-secondary); padding-left: 1.25rem; position: relative; }
+.rulesList li::before { content: '•'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+.availabilityPicker { display: flex; flex-direction: column; gap: 1.25rem; }
+.datePicker { padding: 0.65rem 1rem; border-radius: var(--radius-sm); border: 1.5px solid var(--border); font-size: 0.9rem; color: var(--text-primary); background: var(--surface-2); width: fit-content; cursor: pointer; }
+.datePicker:focus { outline: none; border-color: var(--accent); }
+.availMsg { color: var(--text-muted); font-size: 0.875rem; }
+.slots { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem; }
+.slot { padding: 0.5rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; text-align: center; border: 1.5px solid; display: flex; flex-direction: column; gap: 2px; }
+.slotAvail { background: rgba(0,200,150,0.08); border-color: var(--emerald); color: var(--emerald); }
+.slotBooked { background: rgba(233,69,96,0.08); border-color: var(--accent); color: var(--accent); }
+.similarGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+.similarCard { display: flex; align-items: center; gap: 0.75rem; background: white; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.75rem; overflow: hidden; transition: var(--transition); }
+.similarCard:hover { box-shadow: var(--shadow-md); border-color: var(--accent); }
+.similarCard img { width: 64px; height: 64px; object-fit: cover; border-radius: var(--radius-sm); flex-shrink: 0; }
+.simPlaceholder { width: 64px; height: 64px; background: var(--surface-3); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; flex-shrink: 0; }
+.similarInfo { display: flex; flex-direction: column; gap: 0.25rem; }
+.similarInfo strong { font-size: 0.875rem; color: var(--text-primary); }
+.similarInfo span { font-size: 0.78rem; color: var(--text-muted); }
+
+/* Booking sidebar */
+.sidebar { display: flex; flex-direction: column; gap: 1.25rem; }
+.bookingCard { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; box-shadow: var(--shadow-md); position: sticky; top: 88px; }
+.priceRow { display: flex; align-items: baseline; gap: 0.4rem; margin-bottom: 0.5rem; }
+.price { font-size: 2rem; font-weight: 800; font-family: var(--font-display); color: var(--text-primary); }
+.priceUnit { font-size: 0.9rem; color: var(--text-muted); }
+.ratingRow { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 1.5rem; }
+.stars { color: var(--gold); letter-spacing: -1px; }
+.ratingNum { font-weight: 700; font-size: 0.9rem; }
+.reviews { font-size: 0.85rem; color: var(--text-muted); }
+.venueStats { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.75rem; padding: 1rem; background: var(--surface-2); border-radius: var(--radius-md); }
+.vStat { display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; color: var(--text-secondary); }
+.vStat strong { font-size: 1rem; }
+.bookBtn { display: block; width: 100%; text-align: center; background: var(--accent); color: white; border: none; border-radius: var(--radius-md); padding: 1rem; font-size: 1rem; font-weight: 700; transition: var(--transition); cursor: pointer; }
+.bookBtn:hover { background: #c73652; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(233,69,96,0.3); }
+.bookNote { font-size: 0.78rem; color: var(--text-muted); text-align: center; margin-top: 0.75rem; }
+.ownerCard { background: white; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; display: flex; align-items: center; gap: 0.75rem; }
+.ownerAvatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-light)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1rem; flex-shrink: 0; }
+.ownerCard strong { display: block; font-size: 0.875rem; color: var(--text-primary); }
+.ownerCard span { font-size: 0.78rem; color: var(--text-muted); }
+/* Reviews */
+.reviewsHeader { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.5rem; gap: 1rem; }
+.reviewsHeader h2 { margin-bottom: 0.5rem; }
+.ratingOverview { display: flex; align-items: center; gap: 0.6rem; }
+.bigRating { font-size: 2rem; font-weight: 800; color: var(--text-primary); }
+.reviewCount { font-size: 0.875rem; color: var(--text-muted); }
+.star { font-size: 1.25rem; transition: color 0.1s; }
+.starFilled { color: #f5a623; }
+.starEmpty { color: #ddd; }
+.writeReviewBtn { padding: 0.55rem 1.25rem; background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 600; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+.writeReviewBtn:hover { background: #c73652; }
+.reviewForm { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+.reviewForm h3 { font-size: 1rem; color: var(--text-primary); margin-bottom: 0; }
+.ratingSelect { display: flex; flex-direction: column; gap: 0.4rem; }
+.ratingSelect label { font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.4px; }
+.commentField { display: flex; flex-direction: column; gap: 0.4rem; position: relative; }
+.commentField label { font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.4px; }
+.commentField textarea { padding: 0.65rem 0.9rem; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.9rem; color: var(--text-primary); background: white; resize: vertical; }
+.commentField textarea:focus { outline: none; border-color: var(--accent); }
+.charCount { font-size: 0.75rem; color: var(--text-muted); text-align: right; }
+.reviewFormActions { display: flex; gap: 0.75rem; justify-content: flex-end; }
+.cancelReviewBtn { padding: 0.55rem 1.1rem; background: none; border: 1.5px solid var(--border); border-radius: var(--radius-sm); color: var(--text-secondary); font-size: 0.875rem; cursor: pointer; }
+.submitReviewBtn { padding: 0.55rem 1.25rem; background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 600; cursor: pointer; }
+.submitReviewBtn:hover:not(:disabled) { background: #c73652; }
+.submitReviewBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+.noReviews { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.9rem; background: var(--surface-2); border-radius: var(--radius-md); }
+.reviewsList { display: flex; flex-direction: column; gap: 1rem; }
+.reviewCard { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; }
+.reviewTop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; gap: 1rem; }
+.reviewerInfo { display: flex; align-items: center; gap: 0.75rem; }
+.reviewerAvatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-light)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; overflow: hidden; }
+.reviewerAvatar img { width: 100%; height: 100%; object-fit: cover; }
+.reviewerInfo strong { display: block; font-size: 0.875rem; color: var(--text-primary); }
+.reviewDate { font-size: 0.78rem; color: var(--text-muted); }
+.stars { display: flex; }
+.reviewComment { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
+@media (max-width: 1024px) { .layout { grid-template-columns: 1fr; } .bookingCard { position: static; } .amenitiesGrid { grid-template-columns: repeat(2,1fr); } .slots { grid-template-columns: repeat(4,1fr); } }
+@media (max-width: 768px) { .heroTitle { font-size: 1.75rem; } .hero { height: 340px; } .heroMeta { gap: 0.75rem; } .amenitiesGrid { grid-template-columns: 1fr 1fr; } .slots { grid-template-columns: repeat(3,1fr); } .similarGrid { grid-template-columns: 1fr; } .reviewsHeader { flex-direction: column; } }
