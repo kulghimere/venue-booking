@@ -1,0 +1,67 @@
+.page{padding-top:0;}
+.pageHeader{background:var(--brand);padding:2.5rem 0 2rem;margin-bottom:2.5rem;}
+.pageHeader h1{font-size:1.75rem;color:white;margin-bottom:0.25rem;}
+.pageHeader p{color:rgba(255,255,255,0.55);font-size:0.9rem;}
+.content{padding-bottom:5rem;}
+.filterTabs{display:flex;gap:0.5rem;margin-bottom:2rem;flex-wrap:wrap;}
+.tab{padding:0.5rem 1.1rem;border-radius:20px;border:1.5px solid var(--border);font-size:0.82rem;font-weight:600;background:white;color:var(--text-secondary);cursor:pointer;transition:var(--transition);}
+.tab:hover{border-color:var(--text-primary);color:var(--text-primary);}
+.tabActive{background:var(--brand);border-color:var(--brand);color:white;}
+.list{display:flex;flex-direction:column;gap:1.25rem;}
+.skeletonCard{height:130px;border-radius:var(--radius-lg);}
+.empty{text-align:center;padding:5rem 2rem;}
+.empty span{font-size:3.5rem;display:block;margin-bottom:1rem;}
+.empty h3{font-size:1.25rem;margin-bottom:0.5rem;}
+.empty p{color:var(--text-muted);margin-bottom:1.5rem;}
+.browseBtn{display:inline-block;background:var(--accent);color:white;padding:0.65rem 1.75rem;border-radius:var(--radius-sm);font-weight:700;}
+.bookingCard{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);display:flex;overflow:hidden;box-shadow:var(--shadow-sm);transition:var(--transition);}
+.bookingCard:hover{box-shadow:var(--shadow-md);}
+.venueImg{width:120px;flex-shrink:0;background:var(--surface-3);display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
+.venueImg img{width:100%;height:100%;object-fit:cover;}
+.bookingInfo{flex:1;padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:0.75rem;}
+.bookingHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
+.bookingHeader h3{font-size:1rem;color:var(--text-primary);margin-bottom:0.2rem;}
+.venueName{font-size:0.83rem;color:var(--text-muted);}
+.statusBadge{padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700;border:1.5px solid;white-space:nowrap;flex-shrink:0;}
+.bookingMeta{display:flex;flex-wrap:wrap;gap:0.75rem;}
+.bookingMeta span{font-size:0.82rem;color:var(--text-secondary);}
+.bookingFooter{display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
+.price{font-size:1.1rem;font-weight:800;font-family:var(--font-display);color:var(--text-primary);}
+.actions{display:flex;gap:0.5rem;}
+.viewBtn{padding:0.45rem 1rem;border-radius:var(--radius-sm);border:1.5px solid var(--border);font-size:0.8rem;font-weight:600;color:var(--text-secondary);transition:var(--transition);}
+.viewBtn:hover{border-color:var(--accent);color:var(--accent);}
+.cancelBtn{padding:0.45rem 1rem;border-radius:var(--radius-sm);border:1.5px solid rgba(233,69,96,0.3);background:rgba(233,69,96,0.06);font-size:0.8rem;font-weight:600;color:var(--accent);cursor:pointer;transition:var(--transition);}
+.cancelBtn:hover:not(:disabled){background:var(--accent);color:white;border-color:var(--accent);}
+.cancelBtn:disabled{opacity:0.5;cursor:not-allowed;}
+.confirmBtn{padding:0.45rem 1rem;border-radius:var(--radius-sm);border:1.5px solid rgba(0,200,150,0.3);background:rgba(0,200,150,0.08);font-size:0.8rem;font-weight:600;color:#00c896;cursor:pointer;transition:var(--transition);}
+.confirmBtn:hover:not(:disabled){background:#00c896;color:white;border-color:#00c896;}
+.confirmBtn:disabled{opacity:0.5;cursor:not-allowed;}
+.rejectBtn{padding:0.45rem 1rem;border-radius:var(--radius-sm);border:1.5px solid rgba(233,69,96,0.3);background:rgba(233,69,96,0.06);font-size:0.8rem;font-weight:600;color:var(--accent);cursor:pointer;transition:var(--transition);}
+.rejectBtn:hover:not(:disabled){background:var(--accent);color:white;border-color:var(--accent);}
+.rejectBtn:disabled{opacity:0.5;cursor:not-allowed;}
+.guestName{color:var(--text-muted);font-style:italic;}
+.pendingBadge{display:inline-block;margin-left:0.75rem;background:rgba(245,166,35,0.2);color:#f5a623;border-radius:20px;padding:0.15rem 0.65rem;font-size:0.78rem;font-weight:700;}
+.editBtn{padding:0.45rem 1rem;border-radius:var(--radius-sm);border:1.5px solid rgba(79,172,254,0.35);background:rgba(79,172,254,0.08);font-size:0.8rem;font-weight:600;color:#4facfe;cursor:pointer;transition:var(--transition);}
+.editBtn:hover:not(:disabled){background:#4facfe;color:white;border-color:#4facfe;}
+.editBtn:disabled{opacity:0.5;cursor:not-allowed;}
+.editBadge{padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:700;border:1.5px solid;white-space:nowrap;}
+.editPendingInfo{display:flex;flex-wrap:wrap;gap:0.6rem;padding:0.55rem 0.85rem;background:rgba(245,166,35,0.07);border:1px solid rgba(245,166,35,0.25);border-radius:var(--radius-sm);font-size:0.8rem;color:#f5a623;}
+.ownerNote{font-size:0.78rem;color:var(--text-muted);font-style:italic;padding:0.3rem 0;}
+/* Modal */
+.modalOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;}
+.modalBox{background:white;border-radius:var(--radius-lg);width:100%;max-width:540px;box-shadow:0 20px 60px rgba(0,0,0,0.2);overflow:hidden;}
+.modalHeader{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);}
+.modalHeader h2{font-size:1.1rem;color:var(--text-primary);margin:0;}
+.modalClose{background:none;border:none;font-size:1.2rem;color:var(--text-muted);cursor:pointer;line-height:1;}
+.modalSub{padding:1rem 1.5rem 0;font-size:0.85rem;color:var(--text-secondary);margin:0;}
+.modalGrid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:1.25rem 1.5rem;}
+.formGroup{display:flex;flex-direction:column;gap:0.35rem;}
+.formGroup label{font-size:0.78rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.4px;}
+.formGroup input,.formGroup select,.formGroup textarea{padding:0.55rem 0.8rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:0.875rem;color:var(--text-primary);outline:none;transition:var(--transition);}
+.formGroup input:focus,.formGroup select:focus,.formGroup textarea:focus{border-color:var(--accent);}
+.formGroup textarea{resize:vertical;}
+.modalFooter{display:flex;justify-content:flex-end;gap:0.75rem;padding:1rem 1.5rem;border-top:1px solid var(--border);}
+.modalCancelBtn{padding:0.55rem 1.25rem;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:white;font-size:0.875rem;font-weight:600;color:var(--text-secondary);cursor:pointer;}
+.modalSubmitBtn{padding:0.55rem 1.5rem;border-radius:var(--radius-sm);border:none;background:var(--accent);color:white;font-size:0.875rem;font-weight:700;cursor:pointer;}
+.modalSubmitBtn:disabled{opacity:0.6;cursor:not-allowed;}
+@media(max-width:600px){.bookingCard{flex-direction:column;}.venueImg{width:100%;height:160px;}.bookingHeader{flex-direction:column;gap:0.5rem;}.bookingMeta{gap:0.5rem;}.modalGrid{grid-template-columns:1fr;}}

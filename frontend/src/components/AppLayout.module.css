@@ -1,0 +1,23 @@
+.layout {
+  display: flex;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  margin-left: 240px;
+  transition: margin-left 0.25s ease;
+}
+
+.contentCollapsed {
+  margin-left: 64px;
+}
+
+@media (max-width: 768px) {
+  .content {
+    margin-left: 0;
+  }
+  .contentCollapsed {
+    margin-left: 0;
+  }
+}

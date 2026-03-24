@@ -1,0 +1,40 @@
+.page { padding-top: 0; }
+.loading { display:flex;align-items:center;justify-content:center;min-height:100vh; }
+.pageHeader { background:var(--brand);padding:2.5rem 0 2rem;margin-bottom:2.5rem; }
+.back { background:none;border:none;color:rgba(255,255,255,0.6);font-size:0.875rem;cursor:pointer;margin-bottom:0.75rem;display:block;transition:color 0.2s; }
+.back:hover{color:white;}
+.pageHeader h1{color:white;font-size:1.75rem;}
+.layout{display:grid;grid-template-columns:1fr 360px;gap:2.5rem;padding-bottom:5rem;align-items:start;}
+.formCard{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);padding:2.5rem;box-shadow:var(--shadow-sm);}
+.formTitle{font-size:1.25rem;margin-bottom:1.75rem;color:var(--text-primary);}
+.formGrid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;}
+.fieldGroup{display:flex;flex-direction:column;gap:0.4rem;}
+.fieldGroup label{font-size:0.8rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;}
+.fieldGroup input,.fieldGroup select{padding:0.65rem 0.9rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:0.9rem;color:var(--text-primary);background:var(--surface-2);transition:border-color 0.2s;}
+.fieldGroup input:focus,.fieldGroup select:focus{outline:none;border-color:var(--accent);background:white;}
+.fieldGroupFull{margin-bottom:1.5rem;}
+.fieldGroupFull label{display:block;font-size:0.8rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.4rem;}
+.fieldGroupFull textarea{width:100%;padding:0.7rem 0.9rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:0.9rem;color:var(--text-primary);background:var(--surface-2);resize:vertical;transition:border-color 0.2s;}
+.fieldGroupFull textarea:focus{outline:none;border-color:var(--accent);background:white;}
+.priceSummary{background:var(--surface-2);border-radius:var(--radius-md);padding:1.25rem;margin-bottom:1.25rem;}
+.priceRow{display:flex;justify-content:space-between;font-size:0.9rem;color:var(--text-secondary);margin-bottom:0.75rem;}
+.priceTotal{display:flex;justify-content:space-between;font-size:1.05rem;color:var(--text-primary);padding-top:0.75rem;border-top:1px solid var(--border);}
+.waitlistNote{display:flex;gap:0.75rem;align-items:flex-start;background:rgba(79,172,254,0.08);border:1px solid rgba(79,172,254,0.2);border-radius:var(--radius-md);padding:1rem;margin-bottom:1.75rem;}
+.waitlistNote span{font-size:1.25rem;flex-shrink:0;}
+.waitlistNote p{font-size:0.83rem;color:var(--text-secondary);line-height:1.6;}
+.submitBtn{width:100%;background:var(--accent);color:white;border:none;border-radius:var(--radius-md);padding:1.1rem;font-size:1rem;font-weight:700;cursor:pointer;transition:var(--transition);}
+.submitBtn:hover:not(:disabled){background:#c73652;transform:translateY(-2px);box-shadow:0 8px 24px rgba(233,69,96,0.3);}
+.submitBtn:disabled{opacity:0.6;cursor:not-allowed;}
+.venueSummary{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;position:sticky;top:88px;}
+.venueImg{width:100%;aspect-ratio:16/9;object-fit:cover;}
+.venueInfo{padding:1.5rem;}
+.venueInfo h3{font-size:1.1rem;margin-bottom:0.4rem;}
+.venueInfo>p{font-size:0.85rem;color:var(--text-muted);margin-bottom:1.25rem;}
+.venueDetails{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.25rem;}
+.venueDetails>div{display:flex;flex-direction:column;gap:2px;}
+.venueDetails strong{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);}
+.venueDetails span{font-size:0.875rem;color:var(--text-primary);font-weight:500;}
+.amenities{display:flex;flex-wrap:wrap;gap:0.35rem;}
+.amenities span{font-size:0.72rem;padding:3px 8px;border-radius:20px;background:var(--surface-3);color:var(--text-secondary);font-weight:500;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}.venueSummary{position:static;}}
+@media(max-width:600px){.formGrid{grid-template-columns:1fr;}}
