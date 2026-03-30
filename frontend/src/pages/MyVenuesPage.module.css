@@ -1,0 +1,49 @@
+.page { padding-top: 0; min-height: 100vh; background: #0f1117; color: #e2e8f0; }
+.pageHeader { background: #1a1d2e; border-bottom: 1px solid #2d3148; padding: 2rem 0; margin-bottom: 2rem; }
+.headerInner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+.headerInner h1 { font-size: 1.6rem; color: #fff; margin-bottom: 0.25rem; }
+.headerInner p { color: #8892b0; font-size: 0.875rem; }
+.addBtn { display: inline-block; padding: 0.65rem 1.5rem; background: #e94560; color: white; border-radius: 8px; font-weight: 600; font-size: 0.9rem; text-decoration: none; border: none; cursor: pointer; }
+.addBtn:hover { background: #c73652; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem; }
+.skeletonCard { height: 340px; background: #1a1d2e; border-radius: 16px; animation: pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+.empty { text-align: center; padding: 4rem 2rem; }
+.emptyIcon { font-size: 4rem; margin-bottom: 1rem; }
+.empty h3 { font-size: 1.25rem; color: #e2e8f0; margin-bottom: 0.75rem; }
+.empty p { color: #8892b0; max-width: 400px; margin: 0 auto 1.5rem; line-height: 1.6; }
+.card { background: #1a1d2e; border: 1px solid #2d3148; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.2s, transform 0.2s; }
+.card:hover { border-color: #e94560; transform: translateY(-2px); }
+.cardImg { position: relative; height: 180px; }
+.cardImg img { width: 100%; height: 100%; object-fit: cover; }
+.imgPlaceholder { width: 100%; height: 100%; background: #2d3148; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; }
+.activeBadge { position: absolute; top: 0.75rem; right: 0.75rem; padding: 0.25rem 0.65rem; border-radius: 20px; font-size: 0.72rem; font-weight: 700; }
+.activeOn { background: rgba(0,200,150,0.9); color: white; }
+.activeOff { background: rgba(233,69,96,0.9); color: white; }
+.cardBody { padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; flex: 1; }
+.cardTop { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+.cardTop h3 { font-size: 1rem; font-weight: 700; color: #e2e8f0; }
+.category { font-size: 0.75rem; color: #8892b0; text-transform: capitalize; white-space: nowrap; }
+.location { font-size: 0.82rem; color: #8892b0; }
+.stats { display: flex; gap: 1rem; }
+.stat { display: flex; flex-direction: column; gap: 0.1rem; }
+.statVal { font-size: 0.875rem; font-weight: 600; color: #e2e8f0; }
+.statLabel { font-size: 0.72rem; color: #8892b0; }
+.cardActions { display: flex; gap: 0.5rem; margin-top: auto; }
+.bookingsBtn { flex: 1; text-align: center; padding: 0.55rem 0.75rem; background: rgba(79,172,254,0.1); color: #4facfe; border-radius: 8px; font-size: 0.82rem; font-weight: 500; text-decoration: none; border: 1px solid rgba(79,172,254,0.25); }
+.bookingsBtn:hover { background: #4facfe; color: white; }
+.editBtn { padding: 0.55rem 0.9rem; background: rgba(245,166,35,0.1); color: #f5a623; border: 1px solid rgba(245,166,35,0.25); border-radius: 8px; font-size: 0.82rem; font-weight: 500; cursor: pointer; }
+.editBtn:hover { background: #f5a623; color: white; }
+.deleteBtn { padding: 0.55rem 0.9rem; background: rgba(233,69,96,0.1); color: #e94560; border: 1px solid rgba(233,69,96,0.25); border-radius: 8px; font-size: 0.82rem; font-weight: 500; cursor: pointer; }
+.deleteBtn:hover { background: #e94560; color: white; }
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal { background: #1a1d2e; border: 1px solid #2d3148; border-radius: 16px; padding: 2rem; max-width: 440px; width: 90%; }
+.modal h3 { color: #fff; margin-bottom: 0.75rem; }
+.modal p { color: #8892b0; font-size: 0.9rem; line-height: 1.6; }
+.modalActions { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; }
+.cancelModalBtn { padding: 0.6rem 1.25rem; background: #2d3148; color: #e2e8f0; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; }
+.confirmDeleteBtn { padding: 0.6rem 1.25rem; background: #e94560; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.confirmDeleteBtn:hover:not(:disabled) { background: #c73652; }
+.confirmDeleteBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+@media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
