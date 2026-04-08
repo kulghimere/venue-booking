@@ -94,6 +94,7 @@ exports.register = async (req, res) => {
       return res.status(409).json({ success: false, message: 'An account with this email already exists' });
 
     const { raw, hashed } = makeVerificationToken();
+    const linkExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
     const user = await User.create({
       firstName: firstName.trim(),
@@ -103,13 +104,14 @@ exports.register = async (req, res) => {
       role: role || 'user',
       phone: phone.trim(),
       emailVerificationToken: hashed,
-      emailVerificationExpires: Date.now() + 24 * 60 * 60 * 1000,
+      emailVerificationExpires: linkExpiresAt,
     });
 
     // Respond immediately — don't block on email sending
     res.status(201).json({
       success: true,
       message: 'Account created. A verification link has been sent to your Gmail. Please verify your email before logging in.',
+      linkExpiresAt: linkExpiresAt.toISOString(),
     });
 
     // Send email in background after response is flushed

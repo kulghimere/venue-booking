@@ -255,6 +255,7 @@ export function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [agreed, setAgreed]         = useState(false);
   const [registered, setRegistered] = useState(false);
+  const [linkExpiry, setLinkExpiry] = useState('');
 
   const set = (k, v) => { setForm(f => ({...f,[k]:v})); setErrors(e => ({...e,[k]:''})); };
 
@@ -306,7 +307,13 @@ export function RegisterPage() {
     if (!validate()) return;
     setLoading(true);
     try {
-      await register({ ...form, phone: `+44${sanitizePhone(form.phone)}` });
+      const res = await register({ ...form, phone: `+44${sanitizePhone(form.phone)}` });
+      if (res.linkExpiresAt) {
+        setLinkExpiry(new Date(res.linkExpiresAt).toLocaleString('en-GB', {
+          day: '2-digit', month: 'short', year: 'numeric',
+          hour: '2-digit', minute: '2-digit', hour12: true,
+        }));
+      }
       setRegistered(true);
     } catch (err) {
       const msg = err.response?.data?.message || 'Registration failed';
@@ -329,6 +336,11 @@ export function RegisterPage() {
           A verification link has been sent to <strong>{form.email}</strong>.<br/>
           Please verify your email before logging in.
         </p>
+        {linkExpiry && (
+          <p style={{fontSize:'0.82rem',color:'var(--text-muted)',marginTop:'0.5rem'}}>
+            Link valid until <strong style={{color:'var(--text-primary)'}}>{linkExpiry}</strong>
+          </p>
+        )}
         <p className={styles.switchLine}><Link to="/login">← Back to Sign In</Link></p>
       </div>
     </div>
@@ -637,21 +649,32 @@ export function ResetPasswordPage() {
 export function VerifyEmailPage() {
   const { token }  = useParams();
   const navigate   = useNavigate();
-  const [status, setStatus]   = useState('loading'); // 'loading' | 'success' | 'error'
-  const [message, setMessage] = useState('');
+  const [status, setStatus]       = useState('loading'); // 'loading' | 'success' | 'error'
+  const [message, setMessage]     = useState('');
+  const [countdown, setCountdown] = useState(5);
+  // Guard against React StrictMode double-invocation which would consume the
+  // token on the first call and make the second call fail as "expired".
+  const called = React.useRef(false);
 
   useEffect(() => {
+    if (called.current) return;
+    called.current = true;
     if (!token) { setStatus('error'); setMessage('Invalid verification link.'); return; }
     api.get(`/auth/verify-email/${token}`)
-      .then(() => {
-        setStatus('success');
-        setTimeout(() => navigate('/login'), 3000);
-      })
+      .then(() => setStatus('success'))
       .catch(err => {
         setStatus('error');
         setMessage(err.response?.data?.message || 'Verification failed. The link may have expired.');
       });
-  }, [token, navigate]);
+  }, [token]);
+
+  // Start countdown only after success
+  useEffect(() => {
+    if (status !== 'success') return;
+    if (countdown <= 0) { navigate('/login'); return; }
+    const t = setTimeout(() => setCountdown(c => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [status, countdown, navigate]);
 
   if (status === 'loading') return (
     <div className={styles.page}>
@@ -670,7 +693,18 @@ export function VerifyEmailPage() {
         <div className={styles.logoArea}><Link to="/" className={styles.logo}><span>⬡</span> VenueBook</Link></div>
         <div className={styles.successIcon}>✅</div>
         <h1>Email Verified!</h1>
-        <p className={styles.subtitle}>Your email has been verified successfully. Redirecting you to the login page…</p>
+        <p className={styles.subtitle}>
+          Your email has been verified successfully.<br/>
+          You will be directed to the login page in{' '}
+          <strong style={{color:'var(--accent)'}}>{countdown}</strong> second{countdown !== 1 ? 's' : ''}…
+        </p>
+        <Link
+          to="/login"
+          className={styles.submitBtn}
+          style={{display:'inline-flex',alignItems:'center',justifyContent:'center',textDecoration:'none',marginTop:'1.25rem'}}
+        >
+          Go to Login Now
+        </Link>
       </div>
     </div>
   );
