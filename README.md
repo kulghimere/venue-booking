@@ -352,18 +352,5 @@ Error: listen EADDRINUSE :::5000
 
 ---
 
-## References
-
-- Beck et al. (2001) *Manifesto for Agile Software Development*
-- Kietzmann, Paschen & Treen (2018) *Artificial Intelligence in Advertising*
-- Leymann & Roller (2012) *Production Workflow: Concepts and Techniques*
-- Pautasso, Zimmermann & Leymann (2008) *RESTful Web Services vs Big Web Services*
-- Richards (2015) *Software Architecture Patterns*
-- Silberschatz, Korth & Sudarshan (2020) *Database System Concepts*, 7th edn
-- Sommerville (2016) *Software Engineering*, 10th edn
-- Tilkov & Vinoski (2010) *Node.js: Using JavaScript to Build High-Performance Network Programs*
-- Van der Aalst (2016) *Process Mining: Data Science in Action*, 2nd edn
-
----
 
 *University of the West of Scotland — MSc IT with Project Management — 2025/26*
