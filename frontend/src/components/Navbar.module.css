@@ -1,0 +1,124 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+.scrolled {
+  border-bottom-color: var(--border);
+  background: rgba(255,255,255,0.96);
+  box-shadow: var(--shadow-sm);
+}
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--brand);
+  flex-shrink: 0;
+}
+.logoIcon { color: var(--accent); font-size: 1.4rem; }
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: 1rem;
+  flex: 1;
+}
+.navLink {
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+.navLink:hover { color: var(--text-primary); background: var(--surface-3); }
+.actions { display: flex; align-items: center; gap: 0.75rem; margin-left: auto; }
+.authButtons { display: flex; gap: 0.5rem; }
+.btnGhost {
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border: 1.5px solid var(--border);
+  transition: var(--transition);
+}
+.btnGhost:hover { border-color: var(--text-primary); color: var(--text-primary); }
+.btnPrimary {
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: var(--accent);
+  color: white;
+  transition: var(--transition);
+}
+.btnPrimary:hover { background: #c73652; transform: translateY(-1px); }
+.userMenu { position: relative; }
+.avatar {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 0.9rem;
+  cursor: pointer;
+}
+.dropdown {
+  position: absolute; top: calc(100% + 12px); right: 0;
+  background: white; border: 1px solid var(--border);
+  border-radius: var(--radius-md); min-width: 220px;
+  box-shadow: var(--shadow-lg); padding: 0.5rem;
+  opacity: 0; visibility: hidden; transform: translateY(-8px);
+  transition: all 0.2s ease;
+}
+.userMenu:hover .dropdown { opacity: 1; visibility: visible; transform: none; }
+.dropdownHeader { padding: 0.75rem; border-bottom: 1px solid var(--border); margin-bottom: 0.5rem; }
+.dropdownHeader strong { display: block; font-size: 0.9rem; color: var(--text-primary); }
+.dropdownHeader span { font-size: 0.8rem; color: var(--text-muted); }
+.dropdownItem {
+  display: block; width: 100%; text-align: left;
+  padding: 0.6rem 0.75rem; border-radius: var(--radius-sm);
+  font-size: 0.875rem; font-weight: 500; color: var(--text-secondary);
+  background: none; border: none; transition: var(--transition);
+}
+.dropdownItem:hover { background: var(--surface-3); color: var(--text-primary); }
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; padding: 4px; cursor: pointer;
+}
+.hamburger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--text-primary); border-radius: 2px; transition: var(--transition);
+}
+@media (max-width: 768px) {
+  .nav {
+    position: fixed; top: 68px; left: 0; right: 0;
+    background: white; flex-direction: column; align-items: stretch;
+    padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+    transform: translateY(-100%); opacity: 0; visibility: hidden;
+    transition: all 0.3s ease; gap: 0.25rem; margin-left: 0;
+  }
+  .navOpen { transform: none; opacity: 1; visibility: visible; }
+  .hamburger { display: flex; }
+  .btnGhost { display: none; }
+  .authButtons .btnPrimary { padding: 0.45rem 0.9rem; font-size: 0.8rem; }
+}

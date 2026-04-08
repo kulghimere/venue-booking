@@ -1,0 +1,44 @@
+.card {
+  display: flex; flex-direction: column;
+  background: white; border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  overflow: hidden; transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: transparent; }
+.imageWrap { position: relative; aspect-ratio: 16/9; overflow: hidden; }
+.image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.card:hover .image { transform: scale(1.04); }
+.imagePlaceholder {
+  width: 100%; height: 100%; display: flex;
+  align-items: center; justify-content: center;
+}
+.badge {
+  position: absolute; top: 12px; left: 12px;
+  color: white; font-size: 0.72rem; font-weight: 600;
+  padding: 4px 10px; border-radius: 20px;
+  text-transform: capitalize; letter-spacing: 0.3px;
+}
+.priceTag {
+  position: absolute; bottom: 12px; right: 12px;
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+  color: white; font-weight: 700; font-size: 0.95rem;
+  padding: 5px 12px; border-radius: 20px;
+}
+.priceTag span { font-size: 0.75rem; font-weight: 400; opacity: 0.8; }
+.body { padding: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
+.name { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+.location { font-size: 0.82rem; color: var(--text-muted); }
+.desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; flex: 1; }
+.footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+.rating { display: flex; align-items: center; gap: 0.35rem; }
+.stars { color: var(--gold); font-size: 0.8rem; letter-spacing: -1px; }
+.ratingNum { font-size: 0.85rem; font-weight: 700; color: var(--text-primary); }
+.reviews { font-size: 0.78rem; color: var(--text-muted); }
+.capacity { font-size: 0.82rem; color: var(--text-secondary); }
+.amenities { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.25rem; }
+.amenity {
+  font-size: 0.72rem; font-weight: 500;
+  padding: 3px 8px; border-radius: 20px;
+  background: var(--surface-3); color: var(--text-secondary);
+}

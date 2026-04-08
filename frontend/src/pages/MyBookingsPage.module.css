@@ -1,0 +1,36 @@
+.page{padding-top:68px;}
+.pageHeader{background:var(--brand);padding:2.5rem 0 2rem;margin-bottom:2.5rem;}
+.pageHeader h1{font-size:1.75rem;color:white;margin-bottom:0.25rem;}
+.pageHeader p{color:rgba(255,255,255,0.55);font-size:0.9rem;}
+.content{padding-bottom:5rem;}
+.filterTabs{display:flex;gap:0.5rem;margin-bottom:2rem;flex-wrap:wrap;}
+.tab{padding:0.5rem 1.1rem;border-radius:20px;border:1.5px solid var(--border);font-size:0.82rem;font-weight:600;background:white;color:var(--text-secondary);cursor:pointer;transition:var(--transition);}
+.tab:hover{border-color:var(--text-primary);color:var(--text-primary);}
+.tabActive{background:var(--brand);border-color:var(--brand);color:white;}
+.list{display:flex;flex-direction:column;gap:1.25rem;}
+.skeletonCard{height:130px;border-radius:var(--radius-lg);}
+.empty{text-align:center;padding:5rem 2rem;}
+.empty span{font-size:3.5rem;display:block;margin-bottom:1rem;}
+.empty h3{font-size:1.25rem;margin-bottom:0.5rem;}
+.empty p{color:var(--text-muted);margin-bottom:1.5rem;}
+.browseBtn{display:inline-block;background:var(--accent);color:white;padding:0.65rem 1.75rem;border-radius:var(--radius-sm);font-weight:700;}
+.bookingCard{background:white;border:1px solid var(--border);border-radius:var(--radius-lg);display:flex;overflow:hidden;box-shadow:var(--shadow-sm);transition:var(--transition);}
+.bookingCard:hover{box-shadow:var(--shadow-md);}
+.venueImg{width:120px;flex-shrink:0;background:var(--surface-3);display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
+.venueImg img{width:100%;height:100%;object-fit:cover;}
+.bookingInfo{flex:1;padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:0.75rem;}
+.bookingHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
+.bookingHeader h3{font-size:1rem;color:var(--text-primary);margin-bottom:0.2rem;}
+.venueName{font-size:0.83rem;color:var(--text-muted);}
+.statusBadge{padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700;border:1.5px solid;white-space:nowrap;flex-shrink:0;}
+.bookingMeta{display:flex;flex-wrap:wrap;gap:0.75rem;}
+.bookingMeta span{font-size:0.82rem;color:var(--text-secondary);}
+.bookingFooter{display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
+.price{font-size:1.1rem;font-weight:800;font-family:var(--font-display);color:var(--text-primary);}
+.actions{display:flex;gap:0.5rem;}
+.viewBtn{padding:0.45rem 1rem;border-radius:var(--radius-sm);border:1.5px solid var(--border);font-size:0.8rem;font-weight:600;color:var(--text-secondary);transition:var(--transition);}
+.viewBtn:hover{border-color:var(--accent);color:var(--accent);}
+.cancelBtn{padding:0.45rem 1rem;border-radius:var(--radius-sm);border:1.5px solid rgba(233,69,96,0.3);background:rgba(233,69,96,0.06);font-size:0.8rem;font-weight:600;color:var(--accent);cursor:pointer;transition:var(--transition);}
+.cancelBtn:hover:not(:disabled){background:var(--accent);color:white;border-color:var(--accent);}
+.cancelBtn:disabled{opacity:0.5;cursor:not-allowed;}
+@media(max-width:600px){.bookingCard{flex-direction:column;}.venueImg{width:100%;height:160px;}.bookingHeader{flex-direction:column;gap:0.5rem;}.bookingMeta{gap:0.5rem;}}
