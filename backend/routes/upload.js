@@ -23,7 +23,7 @@ const upload = multer({ storage, fileFilter, limits: { fileSize: 8 * 1024 * 1024
 
 router.post('/', protect, upload.single('image'), (req, res) => {
   if (!req.file) return res.status(400).json({ success: false, message: 'No image uploaded' });
-  const url = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+  const url = `/uploads/${req.file.filename}`;
   res.json({ success: true, url });
 });
 

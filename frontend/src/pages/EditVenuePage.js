@@ -137,7 +137,7 @@ export default function EditVenuePage() {
                   </button>
                   <span className={styles.imageOr}>or</span>
                   <input
-                    type="url"
+                    type="text"
                     className={styles.imageUrlInput}
                     placeholder="Paste image URL (https://…)"
                     value={form.imageUrl}
