@@ -8,6 +8,36 @@ const calcHours = (start, end) => {
   return ((eh * 60 + em) - (sh * 60 + sm)) / 60;
 };
 
+/**
+ * Find every confirmed booking whose date+endTime is now in the past
+ * and bulk-mark them as completed, scoped to the given filter.
+ */
+const autoCompleteExpired = async (filter = {}) => {
+  const now = new Date();
+  // Only look at confirmed bookings on or before today's date
+  const candidates = await Booking.find({
+    ...filter,
+    status: 'confirmed',
+    date: { $lte: now }
+  }).select('_id date endTime');
+
+  const expiredIds = candidates
+    .filter(b => {
+      const end = new Date(b.date);
+      const [h, m] = (b.endTime || '23:59').split(':').map(Number);
+      end.setHours(h, m, 0, 0);
+      return end <= now;
+    })
+    .map(b => b._id);
+
+  if (expiredIds.length) {
+    await Booking.updateMany(
+      { _id: { $in: expiredIds } },
+      { $set: { status: 'completed' } }
+    );
+  }
+};
+
 exports.createBooking = async (req, res) => {
   try {
     const { venueId, eventType, eventTitle, guestCount, date, startTime, endTime, specialRequests } = req.body;
@@ -54,6 +84,8 @@ exports.createBooking = async (req, res) => {
 exports.getMyBookings = async (req, res) => {
   try {
     const { status, page = 1, limit = 10 } = req.query;
+    // Auto-complete any expired confirmed bookings for this user before returning
+    await autoCompleteExpired({ user: req.user._id });
     const query = { user: req.user._id };
     if (status) query.status = status;
     const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -71,6 +103,16 @@ exports.getBooking = async (req, res) => {
     if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
     if (booking.user._id.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ success: false, message: 'Not authorized' });
+    }
+    // Auto-complete this booking if its time has passed
+    if (booking.status === 'confirmed') {
+      const end = new Date(booking.date);
+      const [h, m] = (booking.endTime || '23:59').split(':').map(Number);
+      end.setHours(h, m, 0, 0);
+      if (end <= new Date()) {
+        booking.status = 'completed';
+        await booking.save();
+      }
     }
     res.json({ success: true, booking });
   } catch (err) {
@@ -127,6 +169,8 @@ exports.getOwnerBookings = async (req, res) => {
     const { status } = req.query;
     const venues = await Venue.find({ owner: req.user._id }).select('_id');
     const venueIds = venues.map(v => v._id);
+    // Auto-complete any expired confirmed bookings across all owner's venues
+    await autoCompleteExpired({ venue: { $in: venueIds } });
     const query = { venue: { $in: venueIds } };
     if (status) query.status = status;
     const bookings = await Booking.find(query)

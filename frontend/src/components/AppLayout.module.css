@@ -2,7 +2,6 @@
   display: flex;
 }
 
-/* When sidebar is expanded (240px) */
 .content {
   flex: 1;
   min-width: 0;
@@ -10,8 +9,15 @@
   transition: margin-left 0.25s ease;
 }
 
+.contentCollapsed {
+  margin-left: 64px;
+}
+
 @media (max-width: 768px) {
   .content {
+    margin-left: 0;
+  }
+  .contentCollapsed {
     margin-left: 0;
   }
 }

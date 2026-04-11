@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import styles from './Sidebar.module.css';
@@ -33,11 +33,10 @@ const navItems = {
 const ROLE_LABELS = { user: 'Member', venue_owner: 'Venue Owner', admin: 'Administrator' };
 const ROLE_COLORS = { user: '#4facfe', venue_owner: '#f5a623', admin: '#e94560' };
 
-export default function Sidebar() {
+export default function Sidebar({ collapsed, onCollapse }) {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const [collapsed, setCollapsed] = useState(false);
 
   if (!user) return null;
 
@@ -65,7 +64,7 @@ export default function Sidebar() {
         </div>
         <button
           className={styles.collapseBtn}
-          onClick={() => setCollapsed(c => !c)}
+          onClick={() => onCollapse(c => !c)}
           title={collapsed ? 'Expand' : 'Collapse'}
         >
           {collapsed ? '›' : '‹'}
