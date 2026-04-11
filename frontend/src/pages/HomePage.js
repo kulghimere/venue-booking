@@ -5,25 +5,31 @@ import VenueCard from '../components/VenueCard';
 import styles from './HomePage.module.css';
 
 const CATEGORIES = [
-  { key: 'wedding', label: 'Weddings', icon: '💍', desc: 'Elegant spaces for your special day' },
-  { key: 'conference', label: 'Conferences', icon: '🎯', desc: 'Professional meeting venues' },
-  { key: 'sports', label: 'Sports', icon: '⚡', desc: 'Athletic & competition facilities' },
-  { key: 'exhibition', label: 'Exhibitions', icon: '🎨', desc: 'Showcase & gallery spaces' },
-  { key: 'outdoor', label: 'Outdoor', icon: '🌿', desc: 'Open-air event spaces' },
-  { key: 'social', label: 'Social', icon: '🎉', desc: 'Party & social gatherings' },
+  { key: 'wedding',    label: 'Weddings',     icon: '💍', desc: 'Elegant spaces for your special day' },
+  { key: 'conference', label: 'Conferences',  icon: '🎯', desc: 'Professional meeting venues' },
+  { key: 'sports',     label: 'Sports',       icon: '⚡', desc: 'Athletic & competition facilities' },
+  { key: 'exhibition', label: 'Exhibitions',  icon: '🎨', desc: 'Showcase & gallery spaces' },
+  { key: 'outdoor',    label: 'Outdoor',      icon: '🌿', desc: 'Open-air event spaces' },
+  { key: 'social',     label: 'Social',       icon: '🎉', desc: 'Party & social gatherings' },
 ];
 
 const FEATURES = [
-  { icon: '🤖', title: 'ML-Powered Recommendations', desc: 'Our algorithm analyses your preferences, event history, and real-time demand to surface perfect venue matches.' },
-  { icon: '⚡', title: 'Real-Time Availability', desc: 'See live booking status instantly. Automated conflict detection prevents double-bookings every time.' },
-  { icon: '📋', title: 'Smart Waitlisting', desc: 'Automatically join a waitlist when a venue is full. Get notified instantly when a slot opens up.' },
-  { icon: '🗺️', title: 'Location-Aware Search', desc: 'Filter by city, proximity, and accessibility. Find the most convenient venues for your guests.' },
+  { icon: '🤖', title: 'ML-Powered Recommendations', desc: 'Our algorithm analyses your preferences and event history to surface perfect venue matches.' },
+  { icon: '⚡', title: 'Real-Time Availability',      desc: 'See live booking status instantly. Automated conflict detection prevents double-bookings.' },
+  { icon: '📋', title: 'Smart Waitlisting',           desc: 'Automatically join a waitlist when a venue is full. Get notified the moment a slot opens.' },
+  { icon: '🗺️', title: 'Location-Aware Search',      desc: 'Filter by city and proximity. Find the most convenient venues for your guests.' },
+];
+
+const STEPS = [
+  { num: '1', title: 'Browse & Discover',  desc: 'Search thousands of venues by category, location, capacity, or let AI recommend the perfect match.' },
+  { num: '2', title: 'Book Instantly',     desc: 'Select your date and time, review pricing, and confirm your booking in under 2 minutes.' },
+  { num: '3', title: 'Host Your Event',    desc: 'Arrive, set up, and enjoy. We handle confirmation emails, reminders, and cancellation management.' },
 ];
 
 export default function HomePage() {
-  const [featured, setFeatured] = useState([]);
-  const [search, setSearch] = useState('');
-  const [city, setCity] = useState('');
+  const [featured, setFeatured]   = useState([]);
+  const [search, setSearch]       = useState('');
+  const [city, setCity]           = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,62 +40,90 @@ export default function HomePage() {
     e.preventDefault();
     const params = new URLSearchParams();
     if (search) params.set('search', search);
-    if (city) params.set('city', city);
+    if (city)   params.set('city', city);
     navigate(`/venues?${params.toString()}`);
   };
 
   return (
     <div className={styles.page}>
-      {/* Hero */}
+
+      {/* ── Hero ──────────────────────────────────────────── */}
       <section className={styles.hero}>
         <div className={styles.heroGlow1} />
         <div className={styles.heroGlow2} />
-        <div className={styles.heroContent}>
-          <div className={styles.heroBadge}>✨ AI-Powered Venue Discovery</div>
-          <h1 className={styles.heroTitle}>
-            Find the Perfect Venue<br />
-            <span className={styles.heroAccent}>for Every Occasion</span>
-          </h1>
-          <p className={styles.heroSub}>
-            Intelligent scheduling, real-time availability, and machine learning recommendations — all in one platform.
-          </p>
-          <form className={styles.searchBar} onSubmit={handleSearch}>
-            <div className={styles.searchField}>
-              <span>🔍</span>
-              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search venues, events, amenities…" />
+
+        <div className={styles.heroInner}>
+          {/* Left: copy + search */}
+          <div className={styles.heroContent}>
+            <div className={styles.heroBadge}>✨ AI-Powered Venue Discovery</div>
+
+            <h1 className={styles.heroTitle}>
+              Find the Perfect Venue<br />
+              <span className={styles.heroAccent}>for Every Occasion</span>
+            </h1>
+
+            <p className={styles.heroSub}>
+              Intelligent scheduling, real-time availability, and machine learning recommendations — all in one platform.
+            </p>
+
+            <form className={styles.searchBar} onSubmit={handleSearch}>
+              <div className={styles.searchField}>
+                <span>🔍</span>
+                <input
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Search venues, events, amenities…"
+                />
+              </div>
+              <div className={styles.searchDivider} />
+              <div className={styles.searchField}>
+                <span>📍</span>
+                <input
+                  value={city}
+                  onChange={e => setCity(e.target.value)}
+                  placeholder="City or location"
+                />
+              </div>
+              <button type="submit" className={styles.searchBtn}>Search</button>
+            </form>
+
+            <div className={styles.heroStats}>
+              <div className={styles.stat}><strong>500+</strong><span>Venues</span></div>
+              <div className={styles.statDot} />
+              <div className={styles.stat}><strong>10k+</strong><span>Bookings</span></div>
+              <div className={styles.statDot} />
+              <div className={styles.stat}><strong>98%</strong><span>Satisfaction</span></div>
             </div>
-            <div className={styles.searchDivider} />
-            <div className={styles.searchField}>
-              <span>📍</span>
-              <input value={city} onChange={e => setCity(e.target.value)} placeholder="City or location" />
+          </div>
+
+          {/* Right: floating cards visual */}
+          <div className={styles.heroVisual}>
+            <div className={styles.floatingCard}>
+              <div className={styles.fcIcon}>🤖</div>
+              <div>
+                <strong>AI Match Found</strong>
+                <span>Grand Pavilion — 94% match</span>
+              </div>
             </div>
-            <button type="submit" className={styles.searchBtn}>Search</button>
-          </form>
-          <div className={styles.heroStats}>
-            <div className={styles.stat}><strong>500+</strong><span>Venues</span></div>
-            <div className={styles.statDot} />
-            <div className={styles.stat}><strong>10k+</strong><span>Bookings</span></div>
-            <div className={styles.statDot} />
-            <div className={styles.stat}><strong>98%</strong><span>Satisfaction</span></div>
-          </div>
-        </div>
-        <div className={styles.heroVisual}>
-          <div className={styles.floatingCard} style={{ top: '8%', right: '5%' }}>
-            <div className={styles.fcIcon}>🤖</div>
-            <div><strong>AI Match Found</strong><span>Grand Pavilion — 94% match</span></div>
-          </div>
-          <div className={styles.floatingCard} style={{ bottom: '20%', right: '2%' }}>
-            <div className={styles.fcIcon}>✅</div>
-            <div><strong>Booking Confirmed</strong><span>TechHub · 15 Mar, 9am</span></div>
-          </div>
-          <div className={styles.floatingCard} style={{ bottom: '5%', left: '5%', right: 'auto' }}>
-            <div className={styles.fcIcon}>📋</div>
-            <div><strong>Waitlist Promoted</strong><span>You're next — 1 slot opened</span></div>
+            <div className={styles.floatingCard}>
+              <div className={styles.fcIcon}>✅</div>
+              <div>
+                <strong>Booking Confirmed</strong>
+                <span>TechHub · 15 Mar, 9 am</span>
+              </div>
+            </div>
+            <div className={styles.floatingCard}>
+              <div className={styles.fcIcon}>📋</div>
+              <div>
+                <strong>Waitlist Promoted</strong>
+                <span>You're next — 1 slot opened</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Categories */}
+      {/* ── Browse by Category ────────────────────────────── */}
       <section className={styles.section}>
         <div className="container">
           <div className={styles.sectionHead}>
@@ -108,8 +142,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured venues */}
-      <section className={styles.section}>
+      {/* ── Featured Venues ───────────────────────────────── */}
+      <section className={styles.section} style={{ paddingTop: 0 }}>
         <div className="container">
           <div className={styles.sectionHead}>
             <h2>Featured Venues</h2>
@@ -127,12 +161,31 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features */}
+      {/* ── How It Works ──────────────────────────────────── */}
+      <section className={styles.howSection}>
+        <div className="container">
+          <div className={styles.sectionHead} style={{ justifyContent: 'center', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+            <h2>How It Works</h2>
+            <p className={styles.featuresSub}>Three simple steps to your perfect event</p>
+          </div>
+          <div className={styles.steps}>
+            {STEPS.map(s => (
+              <div key={s.num} className={styles.step}>
+                <div className={styles.stepNum}>{s.num}</div>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Why VenueBook ─────────────────────────────────── */}
       <section className={styles.featuresSection}>
         <div className="container">
-          <div className={styles.sectionHead} style={{ textAlign: 'center', justifyContent: 'center', flexDirection: 'column', gap: '0.5rem', marginBottom: '3rem' }}>
-            <h2>Why VenueBook?</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>Intelligent technology that makes event planning effortless</p>
+          <div className={styles.sectionHead} style={{ justifyContent: 'center', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+            <h2 style={{ color: 'white' }}>Why VenueBook?</h2>
+            <p className={styles.featuresSub}>Intelligent technology that makes event planning effortless</p>
           </div>
           <div className={styles.features}>
             {FEATURES.map((f, i) => (
@@ -146,7 +199,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* ── CTA ───────────────────────────────────────────── */}
       <section className={styles.cta}>
         <div className="container">
           <div className={styles.ctaBox}>
@@ -154,12 +207,13 @@ export default function HomePage() {
             <h2>Ready to Find Your Perfect Venue?</h2>
             <p>Join thousands of event planners using intelligent scheduling to make every event a success.</p>
             <div className={styles.ctaButtons}>
-              <Link to="/register" className={styles.ctaPrimary}>Start for Free</Link>
+              <Link to="/register" className={styles.ctaPrimary}>Get Started Free</Link>
               <Link to="/venues" className={styles.ctaSecondary}>Browse Venues</Link>
             </div>
           </div>
         </div>
       </section>
+
     </div>
   );
 }

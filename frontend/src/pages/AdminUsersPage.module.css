@@ -1,0 +1,49 @@
+.page { padding-top: 0; min-height: 100vh; background: #0f1117; color: #e2e8f0; }
+.pageHeader { background: #1a1d2e; border-bottom: 1px solid #2d3148; padding: 2rem 0; margin-bottom: 2rem; }
+.headerInner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+.headerInner h1 { font-size: 1.6rem; color: #fff; margin-bottom: 0.25rem; }
+.headerInner p { color: #8892b0; font-size: 0.875rem; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+.toolbar { margin-bottom: 1.25rem; }
+.searchForm { display: flex; gap: 0.5rem; }
+.searchInput { flex: 1; max-width: 380px; padding: 0.6rem 1rem; background: #1a1d2e; border: 1px solid #2d3148; border-radius: 8px; color: #e2e8f0; font-size: 0.9rem; }
+.searchInput:focus { outline: none; border-color: #e94560; }
+.searchBtn { padding: 0.6rem 1.25rem; background: #e94560; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.875rem; }
+.searchBtn:hover { background: #c73652; }
+.clearBtn { padding: 0.6rem 1rem; background: #2d3148; color: #8892b0; border: none; border-radius: 8px; cursor: pointer; font-size: 0.875rem; }
+.clearBtn:hover { color: #e2e8f0; }
+.tableWrap { background: #1a1d2e; border: 1px solid #2d3148; border-radius: 12px; overflow: hidden; }
+.table { width: 100%; border-collapse: collapse; }
+.table th { padding: 1rem 1.25rem; text-align: left; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #8892b0; border-bottom: 1px solid #2d3148; }
+.table td { padding: 1rem 1.25rem; border-bottom: 1px solid #1e2235; font-size: 0.875rem; vertical-align: middle; }
+.table tr:last-child td { border-bottom: none; }
+.table tbody tr:hover { background: #1e2235; }
+.rowInactive { opacity: 0.5; }
+.nameCell { display: flex; align-items: center; gap: 0.75rem; }
+.avatar { width: 34px; height: 34px; background: linear-gradient(135deg, #e94560, #c73652); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
+.email { color: #8892b0; }
+.date { color: #8892b0; font-size: 0.82rem; }
+.roleSelect { padding: 0.35rem 0.6rem; border-radius: 6px; border: 1px solid #2d3148; background: #0f1117; color: #e2e8f0; font-size: 0.82rem; cursor: pointer; }
+.roleSelect:focus { outline: none; border-color: #e94560; }
+.role_admin { color: #e94560; border-color: #e9456040; }
+.role_venue_owner { color: #f5a623; border-color: #f5a62340; }
+.role_user { color: #4facfe; border-color: #4facfe40; }
+.badge { padding: 0.25rem 0.65rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+.badgeActive { background: rgba(0,200,150,0.12); color: #00c896; }
+.badgeInactive { background: rgba(233,69,96,0.12); color: #e94560; }
+.deleteBtn { padding: 0.35rem 0.75rem; background: rgba(233,69,96,0.1); color: #e94560; border: 1px solid rgba(233,69,96,0.3); border-radius: 6px; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+.deleteBtn:hover { background: #e94560; color: white; }
+.loading, .empty { text-align: center; padding: 3rem; color: #8892b0; }
+.pagination { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1.5rem; }
+.pageBtn { padding: 0.5rem 1.25rem; background: #1a1d2e; border: 1px solid #2d3148; color: #e2e8f0; border-radius: 8px; cursor: pointer; font-size: 0.875rem; transition: all 0.2s; }
+.pageBtn:hover:not(:disabled) { border-color: #e94560; color: #e94560; }
+.pageBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+.pageInfo { color: #8892b0; font-size: 0.875rem; }
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal { background: #1a1d2e; border: 1px solid #2d3148; border-radius: 16px; padding: 2rem; max-width: 440px; width: 90%; }
+.modal h3 { color: #fff; margin-bottom: 0.75rem; }
+.modal p { color: #8892b0; font-size: 0.9rem; line-height: 1.6; }
+.modalActions { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; }
+.cancelModalBtn { padding: 0.6rem 1.25rem; background: #2d3148; color: #e2e8f0; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; }
+.confirmDeleteBtn { padding: 0.6rem 1.25rem; background: #e94560; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.confirmDeleteBtn:hover { background: #c73652; }

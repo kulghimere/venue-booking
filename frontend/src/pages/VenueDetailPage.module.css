@@ -63,5 +63,41 @@
 .ownerAvatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-light)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1rem; flex-shrink: 0; }
 .ownerCard strong { display: block; font-size: 0.875rem; color: var(--text-primary); }
 .ownerCard span { font-size: 0.78rem; color: var(--text-muted); }
+/* Reviews */
+.reviewsHeader { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.5rem; gap: 1rem; }
+.reviewsHeader h2 { margin-bottom: 0.5rem; }
+.ratingOverview { display: flex; align-items: center; gap: 0.6rem; }
+.bigRating { font-size: 2rem; font-weight: 800; color: var(--text-primary); }
+.reviewCount { font-size: 0.875rem; color: var(--text-muted); }
+.star { font-size: 1.25rem; transition: color 0.1s; }
+.starFilled { color: #f5a623; }
+.starEmpty { color: #ddd; }
+.writeReviewBtn { padding: 0.55rem 1.25rem; background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 600; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+.writeReviewBtn:hover { background: #c73652; }
+.reviewForm { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+.reviewForm h3 { font-size: 1rem; color: var(--text-primary); margin-bottom: 0; }
+.ratingSelect { display: flex; flex-direction: column; gap: 0.4rem; }
+.ratingSelect label { font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.4px; }
+.commentField { display: flex; flex-direction: column; gap: 0.4rem; position: relative; }
+.commentField label { font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.4px; }
+.commentField textarea { padding: 0.65rem 0.9rem; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.9rem; color: var(--text-primary); background: white; resize: vertical; }
+.commentField textarea:focus { outline: none; border-color: var(--accent); }
+.charCount { font-size: 0.75rem; color: var(--text-muted); text-align: right; }
+.reviewFormActions { display: flex; gap: 0.75rem; justify-content: flex-end; }
+.cancelReviewBtn { padding: 0.55rem 1.1rem; background: none; border: 1.5px solid var(--border); border-radius: var(--radius-sm); color: var(--text-secondary); font-size: 0.875rem; cursor: pointer; }
+.submitReviewBtn { padding: 0.55rem 1.25rem; background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 600; cursor: pointer; }
+.submitReviewBtn:hover:not(:disabled) { background: #c73652; }
+.submitReviewBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+.noReviews { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.9rem; background: var(--surface-2); border-radius: var(--radius-md); }
+.reviewsList { display: flex; flex-direction: column; gap: 1rem; }
+.reviewCard { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; }
+.reviewTop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; gap: 1rem; }
+.reviewerInfo { display: flex; align-items: center; gap: 0.75rem; }
+.reviewerAvatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-light)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; overflow: hidden; }
+.reviewerAvatar img { width: 100%; height: 100%; object-fit: cover; }
+.reviewerInfo strong { display: block; font-size: 0.875rem; color: var(--text-primary); }
+.reviewDate { font-size: 0.78rem; color: var(--text-muted); }
+.stars { display: flex; }
+.reviewComment { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
 @media (max-width: 1024px) { .layout { grid-template-columns: 1fr; } .bookingCard { position: static; } .amenitiesGrid { grid-template-columns: repeat(2,1fr); } .slots { grid-template-columns: repeat(4,1fr); } }
-@media (max-width: 768px) { .heroTitle { font-size: 1.75rem; } .hero { height: 340px; } .heroMeta { gap: 0.75rem; } .amenitiesGrid { grid-template-columns: 1fr 1fr; } .slots { grid-template-columns: repeat(3,1fr); } .similarGrid { grid-template-columns: 1fr; } }
+@media (max-width: 768px) { .heroTitle { font-size: 1.75rem; } .hero { height: 340px; } .heroMeta { gap: 0.75rem; } .amenitiesGrid { grid-template-columns: 1fr 1fr; } .slots { grid-template-columns: repeat(3,1fr); } .similarGrid { grid-template-columns: 1fr; } .reviewsHeader { flex-direction: column; } }

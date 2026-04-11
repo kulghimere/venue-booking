@@ -1,5 +1,6 @@
 const Booking = require('../models/Booking');
 const Venue = require('../models/Venue');
+const Waitlist = require('../models/Waitlist');
 
 const calcHours = (start, end) => {
   const [sh, sm] = start.split(':').map(Number);
@@ -19,7 +20,7 @@ exports.createBooking = async (req, res) => {
     const conflict = await Booking.findOne({
       venue: venueId,
       date: new Date(date),
-      status: { $in: ['confirmed', 'pending'] },
+      status: 'confirmed',
       $or: [
         { startTime: { $lt: endTime }, endTime: { $gt: startTime } }
       ]
@@ -41,7 +42,7 @@ exports.createBooking = async (req, res) => {
     const booking = await Booking.create({
       venue: venueId, user: req.user._id, eventType, eventTitle, guestCount,
       date: new Date(date), startTime, endTime, totalHours, totalPrice,
-      status: 'confirmed', confirmedAt: new Date(), specialRequests
+      status: 'pending', specialRequests
     });
 
     res.status(201).json({ success: true, booking, waitlisted: false });
@@ -93,7 +94,7 @@ exports.cancelBooking = async (req, res) => {
     booking.cancellationReason = req.body.reason;
     await booking.save();
 
-    // Promote waitlist
+    // Promote next waitlisted booking
     const next = await Booking.findOne({ venue: booking.venue, date: booking.date, status: 'waitlisted' }).sort('waitlistPosition');
     if (next) {
       next.status = 'confirmed';
@@ -102,7 +103,82 @@ exports.cancelBooking = async (req, res) => {
       await next.save();
     }
 
+    // Notify first active Waitlist entry for same venue+date
+    const waitlistEntry = await Waitlist.findOne({
+      venue: booking.venue,
+      requestedDate: booking.date,
+      status: 'active'
+    }).sort('position');
+    if (waitlistEntry) {
+      waitlistEntry.status = 'notified';
+      waitlistEntry.notifiedAt = new Date();
+      await waitlistEntry.save();
+    }
+
     res.json({ success: true, booking, message: 'Booking cancelled successfully' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.getOwnerBookings = async (req, res) => {
+  try {
+    const Venue = require('../models/Venue');
+    const { status } = req.query;
+    const venues = await Venue.find({ owner: req.user._id }).select('_id');
+    const venueIds = venues.map(v => v._id);
+    const query = { venue: { $in: venueIds } };
+    if (status) query.status = status;
+    const bookings = await Booking.find(query)
+      .populate('venue', 'name location images category pricePerHour')
+      .populate('user', 'firstName lastName email phone')
+      .sort('-createdAt');
+    res.json({ success: true, bookings, total: bookings.length });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.confirmBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id).populate('venue');
+    if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
+
+    if (booking.venue.owner.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Not authorized' });
+    }
+    if (booking.status !== 'pending') {
+      return res.status(400).json({ success: false, message: `Cannot confirm a booking with status "${booking.status}"` });
+    }
+
+    booking.status = 'confirmed';
+    booking.confirmedAt = new Date();
+    await booking.save();
+
+    res.json({ success: true, booking, message: 'Booking confirmed' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.rejectBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id).populate('venue');
+    if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
+
+    if (booking.venue.owner.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Not authorized' });
+    }
+    if (booking.status !== 'pending') {
+      return res.status(400).json({ success: false, message: `Cannot reject a booking with status "${booking.status}"` });
+    }
+
+    booking.status = 'rejected';
+    booking.rejectedAt = new Date();
+    booking.rejectionReason = req.body.reason || '';
+    await booking.save();
+
+    res.json({ success: true, booking, message: 'Booking rejected' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

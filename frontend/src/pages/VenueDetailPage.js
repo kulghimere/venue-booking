@@ -2,9 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { toast } from 'react-toastify';
 import styles from './VenueDetailPage.module.css';
 
 const categoryIcons = { wedding:'💍', conference:'🎯', sports:'⚡', exhibition:'🎨', corporate:'💼', social:'🎉', outdoor:'🌿', concert:'🎵' };
+
+function StarRating({ rating, onSelect, interactive = false }) {
+  const [hovered, setHovered] = useState(0);
+  const display = interactive ? (hovered || rating) : rating;
+  return (
+    <div className={styles.stars}>
+      {[1,2,3,4,5].map(n => (
+        <span
+          key={n}
+          className={`${styles.star} ${n <= display ? styles.starFilled : styles.starEmpty}`}
+          onClick={() => interactive && onSelect && onSelect(n)}
+          onMouseEnter={() => interactive && setHovered(n)}
+          onMouseLeave={() => interactive && setHovered(0)}
+          style={{ cursor: interactive ? 'pointer' : 'default' }}
+        >
+          ★
+        </span>
+      ))}
+    </div>
+  );
+}
 
 export default function VenueDetailPage() {
   const { id } = useParams();
@@ -16,6 +38,15 @@ export default function VenueDetailPage() {
   const [selectedDate, setSelectedDate] = useState('');
   const [availability, setAvailability] = useState([]);
   const [availLoading, setAvailLoading] = useState(false);
+
+  // Reviews state
+  const [reviews, setReviews] = useState([]);
+  const [reviewTotal, setReviewTotal] = useState(0);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [eligibleBooking, setEligibleBooking] = useState(null);
+  const [reviewForm, setReviewForm] = useState({ rating: 0, comment: '' });
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [showReviewForm, setShowReviewForm] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -29,6 +60,29 @@ export default function VenueDetailPage() {
   }, [id]);
 
   useEffect(() => {
+    setReviewsLoading(true);
+    api.get(`/reviews?venueId=${id}`)
+      .then(r => { setReviews(r.data.reviews || []); setReviewTotal(r.data.total || 0); })
+      .catch(() => {})
+      .finally(() => setReviewsLoading(false));
+  }, [id]);
+
+  // Check if user has a completed booking for this venue and hasn't reviewed it
+  useEffect(() => {
+    if (!user) return;
+    api.get('/bookings/my?status=completed')
+      .then(r => {
+        const completed = (r.data.bookings || []).filter(b => b.venue?._id === id || b.venue === id);
+        if (completed.length === 0) return;
+        // Find a booking that hasn't been reviewed
+        const reviewedBookingIds = new Set(reviews.map(r => r.booking));
+        const unreviewedBooking = completed.find(b => !reviewedBookingIds.has(b._id));
+        setEligibleBooking(unreviewedBooking || null);
+      })
+      .catch(() => {});
+  }, [user, id, reviews]);
+
+  useEffect(() => {
     if (!selectedDate) return;
     setAvailLoading(true);
     api.get(`/venues/${id}/availability?date=${selectedDate}`)
@@ -37,7 +91,36 @@ export default function VenueDetailPage() {
       .finally(() => setAvailLoading(false));
   }, [selectedDate, id]);
 
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+    if (!reviewForm.rating) return toast.error('Please select a rating');
+    if (!eligibleBooking) return;
+    setSubmittingReview(true);
+    try {
+      const r = await api.post('/reviews', {
+        venueId: id,
+        bookingId: eligibleBooking._id,
+        rating: reviewForm.rating,
+        comment: reviewForm.comment
+      });
+      setReviews(prev => [r.data.review, ...prev]);
+      setReviewTotal(t => t + 1);
+      setEligibleBooking(null);
+      setShowReviewForm(false);
+      setReviewForm({ rating: 0, comment: '' });
+      toast.success('Review submitted!');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to submit review');
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
+
   const today = new Date().toISOString().split('T')[0];
+
+  const avgRating = reviews.length
+    ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
+    : (venue?.rating || 0).toFixed(1);
 
   if (loading) return (
     <div className={styles.loadingPage}>
@@ -82,7 +165,7 @@ export default function VenueDetailPage() {
           <div className={styles.heroMeta}>
             <span>📍 {venue.location.address}, {venue.location.city}</span>
             <span>👥 Up to {venue.capacity} guests</span>
-            <span>⭐ {(venue.rating || 0).toFixed(1)} ({venue.reviewCount || 0} reviews)</span>
+            <span>⭐ {avgRating} ({reviewTotal || venue.reviewCount || 0} reviews)</span>
           </div>
         </div>
       </div>
@@ -137,6 +220,84 @@ export default function VenueDetailPage() {
               </div>
             </section>
 
+            {/* Reviews Section */}
+            <section className={styles.section}>
+              <div className={styles.reviewsHeader}>
+                <div>
+                  <h2>Reviews</h2>
+                  <div className={styles.ratingOverview}>
+                    <span className={styles.bigRating}>{avgRating}</span>
+                    <StarRating rating={Math.round(parseFloat(avgRating))} />
+                    <span className={styles.reviewCount}>{reviewTotal || venue.reviewCount || 0} reviews</span>
+                  </div>
+                </div>
+                {user && eligibleBooking && !showReviewForm && (
+                  <button className={styles.writeReviewBtn} onClick={() => setShowReviewForm(true)}>
+                    Write a Review
+                  </button>
+                )}
+              </div>
+
+              {showReviewForm && (
+                <form className={styles.reviewForm} onSubmit={handleReviewSubmit}>
+                  <h3>Your Review</h3>
+                  <div className={styles.ratingSelect}>
+                    <label>Rating *</label>
+                    <StarRating
+                      rating={reviewForm.rating}
+                      onSelect={n => setReviewForm(f => ({ ...f, rating: n }))}
+                      interactive
+                    />
+                  </div>
+                  <div className={styles.commentField}>
+                    <label>Comment (optional)</label>
+                    <textarea
+                      rows={3}
+                      maxLength={500}
+                      placeholder="Share your experience…"
+                      value={reviewForm.comment}
+                      onChange={e => setReviewForm(f => ({ ...f, comment: e.target.value }))}
+                    />
+                    <span className={styles.charCount}>{reviewForm.comment.length}/500</span>
+                  </div>
+                  <div className={styles.reviewFormActions}>
+                    <button type="button" className={styles.cancelReviewBtn} onClick={() => setShowReviewForm(false)}>Cancel</button>
+                    <button type="submit" className={styles.submitReviewBtn} disabled={submittingReview}>
+                      {submittingReview ? 'Submitting…' : 'Submit Review'}
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {reviewsLoading ? (
+                <p className={styles.availMsg}>Loading reviews…</p>
+              ) : reviews.length === 0 ? (
+                <div className={styles.noReviews}>
+                  <p>No reviews yet. Be the first to review this venue!</p>
+                </div>
+              ) : (
+                <div className={styles.reviewsList}>
+                  {reviews.map(r => (
+                    <div key={r._id} className={styles.reviewCard}>
+                      <div className={styles.reviewTop}>
+                        <div className={styles.reviewerInfo}>
+                          <div className={styles.reviewerAvatar}>
+                            {r.user?.avatar ? <img src={r.user.avatar} alt="" /> : <span>{r.user?.firstName?.charAt(0)}</span>}
+                          </div>
+                          <div>
+                            <strong>{r.user?.firstName} {r.user?.lastName}</strong>
+                            <span className={styles.reviewDate}>{new Date(r.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                          </div>
+                        </div>
+                        <StarRating rating={r.rating} />
+                      </div>
+                      {r.comment && <p className={styles.reviewComment}>{r.comment}</p>}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+
             {similar.length > 0 && (
               <section className={styles.section}>
                 <h2>Similar Venues</h2>
@@ -163,9 +324,9 @@ export default function VenueDetailPage() {
                 <span className={styles.priceUnit}>per hour</span>
               </div>
               <div className={styles.ratingRow}>
-                <span className={styles.stars}>{'★'.repeat(Math.round(venue.rating || 0))}</span>
-                <span className={styles.ratingNum}>{(venue.rating || 0).toFixed(1)}</span>
-                <span className={styles.reviews}>· {venue.reviewCount} reviews</span>
+                <span className={styles.stars}>{'★'.repeat(Math.round(parseFloat(avgRating)))}</span>
+                <span className={styles.ratingNum}>{avgRating}</span>
+                <span className={styles.reviews}>· {reviewTotal || venue.reviewCount} reviews</span>
               </div>
               <div className={styles.venueStats}>
                 <div className={styles.vStat}><strong>👥</strong><span>Capacity: {venue.capacity}</span></div>

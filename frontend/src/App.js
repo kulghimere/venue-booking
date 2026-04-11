@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import { useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import AppLayout from './components/AppLayout';
 import HomePage from './pages/HomePage';
 import VenuesPage from './pages/VenuesPage';
 import VenueDetailPage from './pages/VenueDetailPage';
@@ -14,6 +15,15 @@ import RegisterPage from './pages/RegisterPage';
 import MyBookingsPage from './pages/MyBookingsPage';
 import RecommendationsPage from './pages/RecommendationsPage';
 import AddVenuePage from './pages/AddVenuePage';
+import EditVenuePage from './pages/EditVenuePage';
+import MyVenuesPage from './pages/MyVenuesPage';
+import VenueBookingsPage from './pages/VenueBookingsPage';
+import OwnerBookingsPage from './pages/OwnerBookingsPage';
+import MyWaitlistPage from './pages/MyWaitlistPage';
+import AdminUsersPage from './pages/AdminUsersPage';
+import AdminBookingsPage from './pages/AdminBookingsPage';
+import AdminVenuesPage from './pages/AdminVenuesPage';
+import AdminReportPage from './pages/AdminReportPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
@@ -24,7 +34,12 @@ const ProtectedRoute = ({ children, roles }) => {
   if (loading) return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Spinner /></div>;
   if (!user) return <Navigate to="/login" replace />;
   if (roles && !roles.includes(user.role)) return <Navigate to="/" replace />;
-  return children;
+  return <>{children}</>;
+};
+
+const ConditionalNavbar = () => {
+  const { user } = useAuth();
+  return !user ? <Navbar /> : null;
 };
 
 const Spinner = () => (
@@ -34,9 +49,11 @@ const Spinner = () => (
 export default function App() {
   return (
     <BrowserRouter>
-      <Navbar />
+      <AppLayout>
+      <ConditionalNavbar />
       <main style={{ minHeight: '100vh' }}>
         <Routes>
+          {/* Public routes — no sidebar */}
           <Route path="/" element={<HomePage />} />
           <Route path="/venues" element={<VenuesPage />} />
           <Route path="/venues/:id" element={<VenueDetailPage />} />
@@ -46,16 +63,28 @@ export default function App() {
           <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
           <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
           <Route path="/resend-verification" element={<ResendVerificationPage />} />
+
+          {/* Protected routes — sidebar shown via AppLayout inside ProtectedRoute */}
           <Route path="/book/:venueId" element={<ProtectedRoute><BookingPage /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
           <Route path="/my-bookings" element={<ProtectedRoute><MyBookingsPage /></ProtectedRoute>} />
+          <Route path="/my-waitlist" element={<ProtectedRoute><MyWaitlistPage /></ProtectedRoute>} />
           <Route path="/recommendations" element={<ProtectedRoute><RecommendationsPage /></ProtectedRoute>} />
           <Route path="/add-venue" element={<ProtectedRoute roles={['venue_owner', 'admin']}><AddVenuePage /></ProtectedRoute>} />
+          <Route path="/edit-venue/:id" element={<ProtectedRoute roles={['venue_owner', 'admin']}><EditVenuePage /></ProtectedRoute>} />
+          <Route path="/my-venues" element={<ProtectedRoute roles={['venue_owner', 'admin']}><MyVenuesPage /></ProtectedRoute>} />
+          <Route path="/venue-bookings/:venueId" element={<ProtectedRoute roles={['venue_owner', 'admin']}><VenueBookingsPage /></ProtectedRoute>} />
+          <Route path="/owner-bookings" element={<ProtectedRoute roles={['venue_owner', 'admin']}><OwnerBookingsPage /></ProtectedRoute>} />
+          <Route path="/admin/users" element={<ProtectedRoute roles={['admin']}><AdminUsersPage /></ProtectedRoute>} />
+          <Route path="/admin/bookings" element={<ProtectedRoute roles={['admin']}><AdminBookingsPage /></ProtectedRoute>} />
+          <Route path="/admin/venues" element={<ProtectedRoute roles={['admin']}><AdminVenuesPage /></ProtectedRoute>} />
+          <Route path="/admin/reports" element={<ProtectedRoute roles={['admin']}><AdminReportPage /></ProtectedRoute>} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
       <Footer />
       <ToastContainer position="bottom-right" autoClose={3500} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover />
+      </AppLayout>
     </BrowserRouter>
   );
 }

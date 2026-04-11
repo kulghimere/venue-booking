@@ -12,14 +12,14 @@ const {
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE || '7d' });
 
-// Gmail only
-const gmailRegex = /^[^\s@]+@gmail\.com$/i;
+// Any valid email
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Letters only, at least 2 chars
 const nameRegex = /^[A-Za-z]{2,}$/;
 
-// UK phone: always +44 followed by 10 digits
-const phoneRegex = /^\+44\d{10}$/;
+// International phone: + followed by country code and number, 7–15 digits total
+const phoneRegex = /^\+\d{7,15}$/;
 
 const passwordStrength = (pw) => {
   if (pw.length < 8) return 'Password must be at least 8 characters';
@@ -57,20 +57,20 @@ exports.register = async (req, res) => {
           : 'Last name must be at least 2 characters and contain only letters',
       });
 
-    // Email — Gmail only
-    if (!email || !gmailRegex.test(email))
+    // Email
+    if (!email || !emailRegex.test(email))
       return res.status(400).json({
         success: false,
-        message: 'Please enter a valid Gmail address (e.g. yourname@gmail.com)',
+        message: 'Please enter a valid email address',
       });
 
-    // Phone — required, UK format
+    // Phone — required, international format
     if (!phone || !phone.trim())
       return res.status(400).json({ success: false, message: 'Phone number is required' });
     if (!phoneRegex.test(phone.trim()))
       return res.status(400).json({
         success: false,
-        message: 'Enter a valid UK phone number (e.g. +447700900123)',
+        message: 'Enter a valid international phone number starting with + (e.g. +447700900123)',
       });
 
     // Password
@@ -156,10 +156,10 @@ exports.verifyEmail = async (req, res) => {
 exports.resendVerification = async (req, res) => {
   try {
     const { email } = req.body;
-    if (!email || !gmailRegex.test(email))
+    if (!email || !emailRegex.test(email))
       return res.status(400).json({
         success: false,
-        message: 'Please enter a valid Gmail address',
+        message: 'Please enter a valid email address',
       });
 
     const user = await User.findOne({ email: email.toLowerCase() });
@@ -193,10 +193,10 @@ exports.login = async (req, res) => {
 
     if (!email || !password)
       return res.status(400).json({ success: false, message: 'Email and password are required' });
-    if (!gmailRegex.test(email))
+    if (!emailRegex.test(email))
       return res.status(400).json({
         success: false,
-        message: 'Please enter a valid Gmail address',
+        message: 'Please enter a valid email address',
       });
 
     const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
@@ -273,7 +273,7 @@ exports.updateProfile = async (req, res) => {
       if (!phoneRegex.test(phone.trim()))
         return res.status(400).json({
           success: false,
-          message: 'Enter a valid UK phone number (e.g. +447700900123)',
+          message: 'Enter a valid international phone number starting with + (e.g. +447700900123)',
         });
       phone = phone.trim();
     }
@@ -296,10 +296,10 @@ exports.updateProfile = async (req, res) => {
 exports.forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
-    if (!email || !gmailRegex.test(email))
+    if (!email || !emailRegex.test(email))
       return res.status(400).json({
         success: false,
-        message: 'Please enter a valid Gmail address',
+        message: 'Please enter a valid email address',
       });
 
     const user = await User.findOne({ email: email.toLowerCase() });

@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['user', 'venue_owner', 'admin'], default: 'user' },
   phone: {
     type: String, required: true, trim: true,
-    match: [/^\+44\d{10}$/, 'Please enter a valid UK phone number']
+    match: [/^\+\d{7,15}$/, 'Please enter a valid international phone number']
   },
   avatar: { type: String },
   location: {

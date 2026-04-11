@@ -13,7 +13,7 @@ const bookingSchema = new mongoose.Schema({
   totalPrice: { type: Number, required: true },
   status: {
     type: String,
-    enum: ['pending', 'confirmed', 'cancelled', 'completed', 'waitlisted'],
+    enum: ['pending', 'confirmed', 'cancelled', 'completed', 'waitlisted', 'rejected'],
     default: 'pending'
   },
   waitlistPosition: { type: Number },
@@ -24,8 +24,10 @@ const bookingSchema = new mongoose.Schema({
     default: 'pending'
   },
   cancellationReason: String,
+  rejectionReason: String,
   confirmedAt: Date,
   cancelledAt: Date,
+  rejectedAt: Date,
   mlScore: { type: Number },
   notes: String
 }, { timestamps: true });

@@ -1,4 +1,4 @@
-.page{padding-top:68px;}
+.page{padding-top:0;}
 .pageHeader{background:var(--brand);padding:2.5rem 0 2rem;margin-bottom:2.5rem;}
 .back{background:none;border:none;color:rgba(255,255,255,0.6);font-size:0.875rem;cursor:pointer;margin-bottom:0.75rem;display:block;transition:color 0.2s;}
 .back:hover{color:white;}
@@ -29,4 +29,16 @@
 .submitBtn{background:var(--accent);color:white;border:none;border-radius:var(--radius-md);padding:0.9rem 3rem;font-size:1rem;font-weight:700;cursor:pointer;transition:var(--transition);}
 .submitBtn:hover:not(:disabled){background:#c73652;transform:translateY(-2px);}
 .submitBtn:disabled{opacity:0.6;cursor:not-allowed;}
-@media(max-width:768px){.grid2,.grid3{grid-template-columns:1fr;}.amenitiesGrid{grid-template-columns:repeat(2,1fr);}[style*="gridColumn"]{grid-column:span 1 !important;}}
+.imagePicker{display:flex;flex-direction:column;gap:0.85rem;}
+.imageInputRow{display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;}
+.uploadFileBtn{padding:0.6rem 1.1rem;background:var(--accent);color:white;border:none;border-radius:var(--radius-sm);font-size:0.85rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:background 0.2s;}
+.uploadFileBtn:hover:not(:disabled){background:#c73652;}
+.uploadFileBtn:disabled{opacity:0.6;cursor:not-allowed;}
+.imageOr{font-size:0.82rem;color:var(--text-muted);flex-shrink:0;}
+.imageUrlInput{flex:1;min-width:200px;padding:0.65rem 0.9rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:0.9rem;color:var(--text-primary);background:var(--surface-2);}
+.imageUrlInput:focus{outline:none;border-color:var(--accent);}
+.previewWrap{position:relative;display:inline-block;max-width:320px;}
+.imagePreview{width:100%;max-height:200px;object-fit:cover;border-radius:var(--radius-sm);border:1.5px solid var(--border);display:block;}
+.clearImg{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.55);border:none;color:white;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:0.8rem;display:flex;align-items:center;justify-content:center;}
+.clearImg:hover{background:rgba(233,69,96,0.85);}
+@media(max-width:768px){.grid2,.grid3{grid-template-columns:1fr;}.amenitiesGrid{grid-template-columns:repeat(2,1fr);}[style*="gridColumn"]{grid-column:span 1 !important;}.imageInputRow{flex-direction:column;align-items:stretch;}.uploadFileBtn{width:100%;}}

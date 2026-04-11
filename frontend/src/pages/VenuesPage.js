@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import api from '../utils/api';
 import VenueCard from '../components/VenueCard';
+import { useAuth } from '../context/AuthContext';
 import styles from './VenuesPage.module.css';
 
 const CATEGORIES = ['wedding','conference','sports','exhibition','outdoor','social','corporate','concert'];
@@ -40,10 +41,11 @@ export default function VenuesPage() {
 
   const clearFilters = () => setFilters({ search: '', city: '', category: '', minCapacity: '', maxPrice: '', page: 1 });
 
+  const { user } = useAuth();
   const hasFilters = filters.search || filters.city || filters.category || filters.minCapacity || filters.maxPrice;
 
   return (
-    <div className={styles.page}>
+    <div className={user ? styles.pageWrapperAuth : styles.pageWrapper}>
       <div className={styles.pageHeader}>
         <div className="container">
           <h1>Browse Venues</h1>
@@ -109,7 +111,7 @@ export default function VenuesPage() {
                 {pages > 1 && (
                   <div className={styles.pagination}>
                     {Array.from({ length: pages }, (_, i) => (
-                      <button key={i} className={`${styles.page} ${filters.page === i+1 ? styles.activePage : ''}`} onClick={() => setFilters(f => ({ ...f, page: i+1 }))}>
+                      <button key={i} className={`${styles.pageBtn} ${filters.page === i+1 ? styles.activePage : ''}`} onClick={() => setFilters(f => ({ ...f, page: i+1 }))}>
                         {i + 1}
                       </button>
                     ))}

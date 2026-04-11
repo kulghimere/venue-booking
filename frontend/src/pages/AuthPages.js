@@ -6,17 +6,13 @@ import api from '../utils/api';
 import styles from './AuthPages.module.css';
 
 // ─── Shared helpers ───────────────────────────────────────────────────────────
-const validateEmail = (e) => /^[^\s@]+@gmail\.com$/i.test(e);
+const validateEmail = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 const validateName  = (n) => /^[A-Za-z]{2,}$/.test(n?.trim());
 
-// Strip spaces/dashes, remove leading 0 (UK local format), leave 10 digits
-const sanitizePhone = (raw) => {
-  let d = raw.replace(/\D/g, '');
-  if (d.startsWith('0')) d = d.slice(1); // 07700900123 → 7700900123
-  return d.slice(0, 10);
-};
-// Valid when exactly 10 digits remain
-const validatePhone = (digits) => /^\d{10}$/.test(digits);
+// Strip spaces/dashes only; keep leading + and digits
+const sanitizePhone = (raw) => raw.replace(/[\s\-()]/g, '');
+// Valid: + followed by 7–15 digits
+const validatePhone = (val) => /^\+\d{7,15}$/.test(val);
 
 // ─── Country codes ────────────────────────────────────────────────────────────
 const COUNTRY_CODES = [
@@ -121,7 +117,6 @@ const EyeIcon = ({ show, toggle }) => (
 export function LoginPage() {
   const { login } = useAuth();
   const navigate   = useNavigate();
-  const [portal, setPortal]     = useState('user');
   const [form, setForm]         = useState({ email: '', password: '' });
   const [errors, setErrors]     = useState({});
   const [showPw, setShowPw]     = useState(false);
@@ -132,7 +127,7 @@ export function LoginPage() {
   const validate = () => {
     const errs = {};
     if (!form.email)               errs.email    = 'Email is required';
-    else if (!validateEmail(form.email)) errs.email = 'Enter a valid Gmail address (e.g. you@gmail.com)';
+    else if (!validateEmail(form.email)) errs.email = 'Enter a valid email address';
     if (!form.password)            errs.password = 'Password is required';
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -143,8 +138,8 @@ export function LoginPage() {
     if (!validate()) return;
     setLoading(true);
     try {
-      const user = await login(form.email, form.password, portal);
-      toast.success(`Welcome back, ${user.firstName}! 👋`);
+      const user = await login(form.email, form.password);
+      toast.success(`Welcome back, ${user.firstName}!`);
       navigate('/dashboard');
     } catch (err) {
       const data = err.response?.data;
@@ -158,40 +153,12 @@ export function LoginPage() {
     } finally { setLoading(false); }
   };
 
-  const portals = [
-    { key: 'user',        label: 'User',         icon: '👤', desc: 'Find & book venues'  },
-    { key: 'venue_owner', label: 'Venue Owner',  icon: '🏛', desc: 'Manage my listings'  },
-    { key: 'admin',       label: 'Admin',        icon: '⚡', desc: 'System administration' },
-  ];
-
   return (
     <div className={styles.page}>
-      <div className={`${styles.card} ${styles.cardWide}`}>
+      <div className={styles.card}>
         <div className={styles.logoArea}><Link to="/" className={styles.logo}><span>⬡</span> VenueBook</Link></div>
         <h1>Sign In</h1>
-        <p className={styles.subtitle}>Choose your portal and sign in below</p>
-
-        {/* Portal selector */}
-        <div className={styles.portalTabs}>
-          {portals.map(p => (
-            <button
-              key={p.key}
-              type="button"
-              className={`${styles.portalTab} ${portal === p.key ? styles.portalTabActive : ''}`}
-              onClick={() => { setPortal(p.key); setErrors({}); }}
-            >
-              <span className={styles.portalIcon}>{p.icon}</span>
-              <strong>{p.label}</strong>
-              <small>{p.desc}</small>
-            </button>
-          ))}
-        </div>
-
-        <div className={styles.portalBanner} data-portal={portal}>
-          {portal === 'admin' && <span>🔐 Admin access only. Credentials are controlled by the system administrator.</span>}
-          {portal === 'venue_owner' && <span>🏛 For registered venue owners only. Not a venue owner yet? <Link to="/register">Register here</Link>.</span>}
-          {portal === 'user' && <span>👤 Welcome! Sign in to browse venues and manage your bookings.</span>}
-        </div>
+        <p className={styles.subtitle}>Welcome back! Sign in to your account.</p>
 
         <form onSubmit={handleSubmit} className={styles.form} noValidate>
           {errors.general && (
@@ -206,7 +173,7 @@ export function LoginPage() {
           <div className={styles.fieldGroup}>
             <label>Email Address</label>
             <input
-              type="email" autoComplete="email" placeholder="you@gmail.com"
+              type="email" autoComplete="email" placeholder="you@example.com"
               value={form.email} onChange={e => set('email', e.target.value)}
               className={errors.email ? styles.inputError : ''}
             />
@@ -231,15 +198,13 @@ export function LoginPage() {
 
           <button type="submit" className={styles.submitBtn} disabled={loading}>
             {loading ? <span className={styles.spinner} /> : null}
-            {loading ? 'Signing in…' : `Sign In as ${portals.find(p=>p.key===portal)?.label}`}
+            {loading ? 'Signing in…' : 'Sign In'}
           </button>
         </form>
 
-        {portal !== 'admin' && (
-          <p className={styles.switchLine}>
-            Don't have an account? <Link to="/register">Create one free</Link>
-          </p>
-        )}
+        <p className={styles.switchLine}>
+          Don't have an account? <Link to="/register">Create one free</Link>
+        </p>
       </div>
     </div>
   );
@@ -275,14 +240,12 @@ export function RegisterPage() {
     if (!form.email)
       errs.email = 'Email is required';
     else if (!validateEmail(form.email))
-      errs.email = 'Only Gmail addresses are accepted (e.g. you@gmail.com)';
+      errs.email = 'Enter a valid email address';
 
     if (!form.phone || !form.phone.trim())
       errs.phone = 'Phone number is required';
-    else if (form.dialCode !== '+44')
-      errs.phone = 'Only UK (+44) phone numbers are accepted';
-    else if (!validatePhone(sanitizePhone(form.phone)))
-      errs.phone = 'Enter a valid UK number — 10 digits after +44 (e.g. 7700 900123)';
+    else if (!validatePhone(`${form.dialCode}${sanitizePhone(form.phone)}`))
+      errs.phone = 'Enter a valid phone number';
 
     if (!form.password)
       errs.password = 'Password is required';
@@ -307,7 +270,7 @@ export function RegisterPage() {
     if (!validate()) return;
     setLoading(true);
     try {
-      const res = await register({ ...form, phone: `+44${sanitizePhone(form.phone)}` });
+      const res = await register({ ...form, phone: `${form.dialCode}${sanitizePhone(form.phone)}` });
       if (res.linkExpiresAt) {
         setLinkExpiry(new Date(res.linkExpiresAt).toLocaleString('en-GB', {
           day: '2-digit', month: 'short', year: 'numeric',
@@ -396,9 +359,9 @@ export function RegisterPage() {
 
           {/* Email */}
           <div className={styles.fieldGroup}>
-            <label>Gmail Address *</label>
+            <label>Email Address *</label>
             <input
-              type="email" placeholder="you@gmail.com"
+              type="email" placeholder="you@example.com"
               value={form.email} onChange={e => set('email', e.target.value)}
               className={errors.email ? styles.inputError : ''}
             />
@@ -407,7 +370,7 @@ export function RegisterPage() {
 
           {/* Phone */}
           <div className={styles.fieldGroup}>
-            <label>Phone Number * <span className={styles.optional}>(UK numbers only)</span></label>
+            <label>Phone Number *</label>
             <div className={styles.phoneWrap}>
               <select
                 className={styles.dialSelect}
@@ -422,17 +385,16 @@ export function RegisterPage() {
               </select>
               <input
                 type="tel"
-                placeholder={form.dialCode === '+44' ? '7700 900123' : 'UK numbers only'}
+                placeholder="Enter your number"
                 value={form.phone}
                 onChange={e => set('phone', e.target.value)}
                 className={errors.phone ? styles.inputError : ''}
                 maxLength={15}
-                disabled={form.dialCode !== '+44'}
               />
             </div>
             <FieldError msg={errors.phone} />
-            {form.dialCode === '+44' && form.phone && !errors.phone && validatePhone(sanitizePhone(form.phone)) && (
-              <span style={{fontSize:'0.75rem',color:'#00c896',fontWeight:600}}>✓ Valid UK number</span>
+            {form.phone && !errors.phone && validatePhone(`${form.dialCode}${sanitizePhone(form.phone)}`) && (
+              <span style={{fontSize:'0.75rem',color:'#00c896',fontWeight:600}}>✓ Valid number</span>
             )}
           </div>
 
@@ -498,7 +460,7 @@ export function ForgotPasswordPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) { setError('Email is required'); return; }
-    if (!validateEmail(email)) { setError('Enter a valid Gmail address (e.g. you@gmail.com)'); return; }
+    if (!validateEmail(email)) { setError('Enter a valid email address'); return; }
     setError('');
     setLoading(true);
     try {
@@ -545,7 +507,7 @@ export function ForgotPasswordPage() {
           {error && <div className={styles.alertError}>⚠ {error}</div>}
           <div className={styles.fieldGroup}>
             <label>Email Address</label>
-            <input type="email" placeholder="you@gmail.com" value={email} onChange={e => { setEmail(e.target.value); setError(''); }} className={error ? styles.inputError : ''} />
+            <input type="email" placeholder="you@example.com" value={email} onChange={e => { setEmail(e.target.value); setError(''); }} className={error ? styles.inputError : ''} />
           </div>
           <button type="submit" className={styles.submitBtn} disabled={loading}>
             {loading ? <span className={styles.spinner} /> : null}
@@ -735,7 +697,7 @@ export function ResendVerificationPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) { setError('Email is required'); return; }
-    if (!validateEmail(email)) { setError('Enter a valid Gmail address (e.g. you@gmail.com)'); return; }
+    if (!validateEmail(email)) { setError('Enter a valid email address'); return; }
     setError('');
     setLoading(true);
     try {
@@ -764,12 +726,12 @@ export function ResendVerificationPage() {
         <div className={styles.logoArea}><Link to="/" className={styles.logo}><span>⬡</span> VenueBook</Link></div>
         <div className={styles.successIcon}>📧</div>
         <h1>Resend Verification</h1>
-        <p className={styles.subtitle}>Enter your Gmail address and we'll send a new verification link.</p>
+        <p className={styles.subtitle}>Enter your email address and we'll send a new verification link.</p>
         <form onSubmit={handleSubmit} className={styles.form} noValidate>
           {error && <div className={styles.alertError}>⚠ {error}</div>}
           <div className={styles.fieldGroup}>
-            <label>Gmail Address</label>
-            <input type="email" placeholder="you@gmail.com" value={email} onChange={e => { setEmail(e.target.value); setError(''); }} className={error ? styles.inputError : ''} />
+            <label>Email Address</label>
+            <input type="email" placeholder="you@example.com" value={email} onChange={e => { setEmail(e.target.value); setError(''); }} className={error ? styles.inputError : ''} />
           </div>
           <button type="submit" className={styles.submitBtn} disabled={loading}>
             {loading ? <span className={styles.spinner} /> : null}

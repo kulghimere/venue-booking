@@ -1,4 +1,4 @@
-.page{padding-top:68px;}
+.page{padding-top:0;}
 .pageHeader{background:var(--brand);padding:2.5rem 0 2rem;margin-bottom:2.5rem;}
 .headerContent{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
 .pageHeader h1{font-size:1.75rem;color:white;margin-bottom:0.25rem;}

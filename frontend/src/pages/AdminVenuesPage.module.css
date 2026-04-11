@@ -1,0 +1,40 @@
+.page { padding-top: 0; min-height: 100vh; background: #0f1117; color: #e2e8f0; }
+.pageHeader { background: #1a1d2e; border-bottom: 1px solid #2d3148; padding: 2rem 0; margin-bottom: 2rem; }
+.headerInner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+.headerInner h1 { font-size: 1.6rem; color: #fff; margin-bottom: 0.25rem; }
+.headerInner p { color: #8892b0; font-size: 0.875rem; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+.tableWrap { background: #1a1d2e; border: 1px solid #2d3148; border-radius: 12px; overflow: hidden; }
+.table { width: 100%; border-collapse: collapse; }
+.table th { padding: 1rem 1.25rem; text-align: left; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #8892b0; border-bottom: 1px solid #2d3148; }
+.table td { padding: 0.85rem 1.25rem; border-bottom: 1px solid #1e2235; font-size: 0.875rem; vertical-align: middle; }
+.table tr:last-child td { border-bottom: none; }
+.table tbody tr:hover { background: #1e2235; }
+.rowInactive { opacity: 0.5; }
+.venueCell { display: flex; align-items: center; gap: 0.75rem; }
+.venueThumbnail { width: 40px; height: 40px; border-radius: 8px; overflow: hidden; flex-shrink: 0; background: #2d3148; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+.venueThumbnail img { width: 100%; height: 100%; object-fit: cover; }
+.venueName { color: #e2e8f0; font-weight: 500; text-decoration: none; }
+.venueName:hover { color: #e94560; }
+.ownerCell { display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.875rem; }
+.ownerCell span { color: #8892b0; font-size: 0.8rem; }
+.categoryBadge { padding: 0.2rem 0.6rem; background: rgba(79,172,254,0.1); color: #4facfe; border-radius: 20px; font-size: 0.75rem; font-weight: 500; text-transform: capitalize; }
+.price { color: #00c896; font-weight: 600; }
+.statusBadge { padding: 0.25rem 0.65rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+.badgeActive { background: rgba(0,200,150,0.12); color: #00c896; }
+.badgeInactive { background: rgba(233,69,96,0.12); color: #e94560; }
+.actionBtns { display: flex; gap: 0.5rem; }
+.toggleBtn { padding: 0.35rem 0.7rem; border-radius: 6px; font-size: 0.8rem; font-weight: 500; cursor: pointer; border: 1px solid; transition: all 0.2s; }
+.toggleBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.toggleDeactivate { background: rgba(233,69,96,0.1); color: #e94560; border-color: rgba(233,69,96,0.3); }
+.toggleDeactivate:hover:not(:disabled) { background: #e94560; color: white; }
+.toggleActivate { background: rgba(0,200,150,0.1); color: #00c896; border-color: rgba(0,200,150,0.3); }
+.toggleActivate:hover:not(:disabled) { background: #00c896; color: white; }
+.viewBtn { padding: 0.35rem 0.7rem; background: rgba(79,172,254,0.1); color: #4facfe; border-radius: 6px; font-size: 0.8rem; font-weight: 500; text-decoration: none; border: 1px solid rgba(79,172,254,0.3); }
+.viewBtn:hover { background: #4facfe; color: white; }
+.loading, .empty { text-align: center; padding: 3rem; color: #8892b0; }
+.pagination { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1.5rem; }
+.pageBtn { padding: 0.5rem 1.25rem; background: #1a1d2e; border: 1px solid #2d3148; color: #e2e8f0; border-radius: 8px; cursor: pointer; font-size: 0.875rem; }
+.pageBtn:hover:not(:disabled) { border-color: #e94560; color: #e94560; }
+.pageBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+.pageInfo { color: #8892b0; font-size: 0.875rem; }

@@ -1,4 +1,4 @@
-.page{padding-top:68px;}
+.page{padding-top:0;}
 .pageHeader{background:linear-gradient(135deg,var(--brand),var(--brand-mid));padding:3rem 0 2rem;margin-bottom:2.5rem;}
 .headerBadge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(233,69,96,0.2);border:1px solid rgba(233,69,96,0.3);color:#ff8fa3;font-size:0.8rem;font-weight:600;padding:4px 12px;border-radius:20px;margin-bottom:0.75rem;}
 .pageHeader h1{font-size:2rem;color:white;margin-bottom:0.5rem;}

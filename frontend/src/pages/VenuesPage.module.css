@@ -1,4 +1,5 @@
-.page { padding-top: 68px; }
+.pageWrapper { padding-top: 68px; }
+.pageWrapperAuth { padding-top: 0; }
 .pageHeader { background: var(--brand); padding: 3rem 0 2rem; margin-bottom: 2.5rem; }
 .pageHeader h1 { font-size: 2rem; color: white; margin-bottom: 0.25rem; }
 .pageHeader p { color: rgba(255,255,255,0.5); font-size: 0.95rem; }
@@ -26,8 +27,8 @@
 .empty p { color: var(--text-muted); margin-bottom: 1.5rem; }
 .clearBtn2 { background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); padding: 0.6rem 1.5rem; font-weight: 600; cursor: pointer; }
 .pagination { display: flex; gap: 0.5rem; justify-content: center; margin-top: 2.5rem; }
-.page { width: 36px; height: 36px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); background: white; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: var(--transition); }
-.page:hover { border-color: var(--accent); color: var(--accent); }
+.pageBtn { width: 36px; height: 36px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); background: white; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: var(--transition); }
+.pageBtn:hover { border-color: var(--accent); color: var(--accent); }
 .activePage { background: var(--accent); color: white; border-color: var(--accent); }
 @media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 768px) {

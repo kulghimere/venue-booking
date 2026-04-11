@@ -1,0 +1,62 @@
+.page { min-height: 100vh; background: #0f1117; color: #e2e8f0; }
+.loading { min-height: 100vh; display: flex; align-items: center; justify-content: center; color: #8892b0; background: #0f1117; }
+
+.pageHeader { background: #1a1d2e; border-bottom: 1px solid #2d3148; padding: 2rem 0; margin-bottom: 0; }
+.headerInner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+.headerInner h1 { font-size: 1.6rem; color: #fff; margin-bottom: 0.25rem; }
+.headerInner p { color: #8892b0; font-size: 0.875rem; }
+.venuesBtn { padding: 0.55rem 1.2rem; background: #2d3148; border: 1px solid #3a4060; border-radius: 8px; color: #e2e8f0; font-size: 0.875rem; font-weight: 500; text-decoration: none; transition: background 0.2s; }
+.venuesBtn:hover { background: #3a4060; }
+
+.summaryBar { background: #1a1d2e; border-bottom: 1px solid #2d3148; padding: 0.85rem 0; margin-bottom: 2rem; }
+.summaryInner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.summaryChip { display: flex; align-items: center; gap: 0.45rem; padding: 0.35rem 0.75rem; border-radius: 20px; border: 1px solid; }
+.summaryDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.summaryLabel { font-size: 0.78rem; color: #8892b0; text-transform: capitalize; }
+.summaryCount { font-size: 0.82rem; font-weight: 700; }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+
+.tableSection { background: #1a1d2e; border: 1px solid #2d3148; border-radius: 16px; overflow: hidden; }
+.tableHeader { padding: 1.25rem 1.5rem; border-bottom: 1px solid #2d3148; display: flex; flex-direction: column; gap: 0.85rem; }
+.filterRow { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; }
+.filterRow h2 { color: #e2e8f0; font-size: 1rem; margin: 0; }
+.searchInput { background: #0f1117; border: 1px solid #2d3148; border-radius: 8px; color: #e2e8f0; padding: 0.45rem 0.9rem; font-size: 0.85rem; width: 260px; outline: none; }
+.searchInput::placeholder { color: #4a5270; }
+.searchInput:focus { border-color: #e94560; }
+
+.filterTabs { display: flex; gap: 0.25rem; flex-wrap: wrap; }
+.tab { padding: 0.35rem 0.75rem; background: none; border: 1px solid #2d3148; border-radius: 6px; color: #8892b0; font-size: 0.78rem; cursor: pointer; text-transform: capitalize; transition: all 0.15s; }
+.tab:hover { color: #e2e8f0; border-color: #4a5270; }
+.tabActive { background: #e94560; border-color: #e94560; color: white; }
+
+.empty { text-align: center; padding: 3rem; color: #8892b0; }
+
+.tableWrap { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; }
+.table th { padding: 0.85rem 1.1rem; text-align: left; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #8892b0; border-bottom: 1px solid #2d3148; white-space: nowrap; }
+.table td { padding: 0.85rem 1.1rem; border-bottom: 1px solid #1e2235; font-size: 0.875rem; vertical-align: middle; }
+.table tr:last-child td { border-bottom: none; }
+.table tbody tr:hover { background: #1e2235; }
+
+.guestCell { display: flex; flex-direction: column; gap: 0.15rem; }
+.guestCell strong { color: #e2e8f0; }
+.guestCell span { color: #8892b0; font-size: 0.78rem; }
+
+.venueLink { color: #4facfe; text-decoration: none; font-weight: 500; font-size: 0.85rem; }
+.venueLink:hover { text-decoration: underline; }
+
+.dateCell { white-space: nowrap; }
+.time { color: #8892b0; white-space: nowrap; }
+
+.statusBadge { padding: 0.25rem 0.65rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+
+.price { color: #00c896; font-weight: 600; }
+
+.actionBtns { display: flex; gap: 0.4rem; }
+.confirmBtn { padding: 0.3rem 0.7rem; border-radius: 6px; border: none; background: rgba(0,200,150,0.15); color: #00c896; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.confirmBtn:hover:not(:disabled) { background: rgba(0,200,150,0.3); }
+.confirmBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.rejectBtn { padding: 0.3rem 0.7rem; border-radius: 6px; border: none; background: rgba(233,69,96,0.12); color: #e94560; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.rejectBtn:hover:not(:disabled) { background: rgba(233,69,96,0.25); }
+.rejectBtn:disabled { opacity: 0.5; cursor: not-allowed; }
