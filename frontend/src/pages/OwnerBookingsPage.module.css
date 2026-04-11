@@ -60,3 +60,19 @@
 .rejectBtn { padding: 0.3rem 0.7rem; border-radius: 6px; border: none; background: rgba(233,69,96,0.12); color: #e94560; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
 .rejectBtn:hover:not(:disabled) { background: rgba(233,69,96,0.25); }
 .rejectBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Edit request */
+.editAlertBadge { display: inline-block; margin-left: 0.75rem; background: rgba(245,166,35,0.18); color: #f5a623; border-radius: 20px; padding: 0.15rem 0.65rem; font-size: 0.78rem; font-weight: 700; }
+.rowWithEdit { background: rgba(245,166,35,0.04); }
+.actionCell { display: flex; flex-direction: column; gap: 0.5rem; }
+.editRequestBox { background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.25); border-radius: 8px; padding: 0.55rem 0.7rem; display: flex; flex-direction: column; gap: 0.35rem; }
+.editRequestTitle { font-size: 0.72rem; font-weight: 700; color: #f5a623; text-transform: uppercase; letter-spacing: 0.5px; }
+.editRequestDetails { display: flex; flex-wrap: wrap; gap: 0.35rem 0.75rem; font-size: 0.75rem; color: #c8d0e0; }
+.editActionBtns { display: flex; gap: 0.35rem; }
+.approveEditBtn { padding: 0.28rem 0.65rem; border-radius: 6px; border: none; background: rgba(0,200,150,0.15); color: #00c896; font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+.approveEditBtn:hover:not(:disabled) { background: rgba(0,200,150,0.3); }
+.approveEditBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.rejectEditBtn { padding: 0.28rem 0.65rem; border-radius: 6px; border: none; background: rgba(233,69,96,0.12); color: #e94560; font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+.rejectEditBtn:hover:not(:disabled) { background: rgba(233,69,96,0.25); }
+.rejectEditBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.editResolved { font-size: 0.75rem; font-weight: 600; }

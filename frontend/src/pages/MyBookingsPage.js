@@ -10,9 +10,120 @@ const STATUS_ICONS   = { confirmed:'✅', pending:'⏳', cancelled:'✗', reject
 const STATUS_LABELS  = { confirmed:'Confirmed', pending:'Awaiting Confirmation', cancelled:'Cancelled', rejected:'Rejected', completed:'Completed', waitlisted:'Waitlisted' };
 const STATUSES       = ['', 'pending', 'confirmed', 'waitlisted', 'completed', 'cancelled', 'rejected'];
 
-// ─── Shared booking card ──────────────────────────────────────────────────────
-function BookingCard({ b, isOwnerView, onCancel, onConfirm, onReject, actionId }) {
+// 30-minute slots from 8:00 AM to 9:00 PM, stored in 24h (HH:MM) for the backend
+const TIME_SLOTS = (() => {
+  const slots = [];
+  for (let h = 8; h <= 21; h++) {
+    slots.push(`${String(h).padStart(2, '0')}:00`);
+    if (h < 21) slots.push(`${String(h).padStart(2, '0')}:30`);
+  }
+  return slots;
+})();
+
+// Display a 24h "HH:MM" string as "h:MM AM/PM"
+const to12h = (time24) => {
+  const [h, m] = time24.split(':').map(Number);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12  = h % 12 || 12;
+  return `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
+};
+
+const EDIT_BADGE = {
+  pending:  { label: 'Edit Pending',   color: '#f5a623' },
+  approved: { label: 'Edit Approved',  color: '#00c896' },
+  rejected: { label: 'Edit Rejected',  color: '#e94560' },
+};
+
+// ─── Edit modal ───────────────────────────────────────────────────────────────
+function EditModal({ booking, onClose, onSubmitted }) {
+  const [form, setForm] = useState({
+    date:            booking.date ? new Date(booking.date).toISOString().split('T')[0] : '',
+    startTime:       booking.startTime || '09:00',
+    endTime:         booking.endTime   || '17:00',
+    guestCount:      booking.guestCount?.toString() || '',
+    specialRequests: booking.specialRequests || '',
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+  const today = new Date().toISOString().split('T')[0];
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      const res = await api.put(`/bookings/${booking._id}/edit-request`, {
+        date:            form.date,
+        startTime:       form.startTime,
+        endTime:         form.endTime,
+        guestCount:      parseInt(form.guestCount),
+        specialRequests: form.specialRequests,
+      });
+      toast.success('Edit request sent — awaiting owner approval');
+      onSubmitted(res.data.booking);
+      onClose();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Could not submit edit request');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className={styles.modalOverlay} onClick={onClose}>
+      <div className={styles.modalBox} onClick={e => e.stopPropagation()}>
+        <div className={styles.modalHeader}>
+          <h2>Edit Booking</h2>
+          <button className={styles.modalClose} onClick={onClose}>✕</button>
+        </div>
+        <p className={styles.modalSub}>
+          Propose new details for <strong>{booking.eventTitle}</strong> at <strong>{booking.venue?.name}</strong>.
+          The venue owner will review and approve or reject your request.
+        </p>
+        <form onSubmit={handleSubmit}>
+          <div className={styles.modalGrid}>
+            <div className={styles.formGroup}>
+              <label>Date</label>
+              <input type="date" min={today} value={form.date} onChange={e => set('date', e.target.value)} required />
+            </div>
+            <div className={styles.formGroup}>
+              <label>Guest Count</label>
+              <input type="number" min={1} value={form.guestCount} onChange={e => set('guestCount', e.target.value)} required />
+            </div>
+            <div className={styles.formGroup}>
+              <label>Start Time</label>
+              <select value={form.startTime} onChange={e => set('startTime', e.target.value)}>
+                {TIME_SLOTS.map(t => <option key={t} value={t}>{to12h(t)}</option>)}
+              </select>
+            </div>
+            <div className={styles.formGroup}>
+              <label>End Time</label>
+              <select value={form.endTime} onChange={e => set('endTime', e.target.value)}>
+                {TIME_SLOTS.map(t => <option key={t} value={t}>{to12h(t)}</option>)}
+              </select>
+            </div>
+            <div className={styles.formGroup} style={{ gridColumn: 'span 2' }}>
+              <label>Special Requests</label>
+              <textarea rows={3} value={form.specialRequests} onChange={e => set('specialRequests', e.target.value)} placeholder="Any special requests…" />
+            </div>
+          </div>
+          <div className={styles.modalFooter}>
+            <button type="button" className={styles.modalCancelBtn} onClick={onClose}>Cancel</button>
+            <button type="submit" className={styles.modalSubmitBtn} disabled={submitting}>
+              {submitting ? 'Submitting…' : 'Send Edit Request'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// ─── Booking card ─────────────────────────────────────────────────────────────
+function BookingCard({ b, isOwnerView, onCancel, onConfirm, onReject, onEdit, actionId }) {
   const color = STATUS_COLORS[b.status] || '#8892b0';
+  const er    = b.editRequest;
+  const canEdit = !isOwnerView && ['confirmed', 'pending'].includes(b.status) && er?.status !== 'pending';
+
   return (
     <div className={styles.bookingCard}>
       <div className={styles.venueImg}>
@@ -29,9 +140,20 @@ function BookingCard({ b, isOwnerView, onCancel, onConfirm, onReject, actionId }
               )}
             </p>
           </div>
-          <div className={styles.statusBadge} style={{ background:`${color}18`, color, borderColor:`${color}40` }}>
-            {STATUS_ICONS[b.status]} {STATUS_LABELS[b.status] || b.status}
-            {b.status === 'waitlisted' && b.waitlistPosition && ` (#${b.waitlistPosition})`}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.35rem' }}>
+            <div className={styles.statusBadge} style={{ background:`${color}18`, color, borderColor:`${color}40` }}>
+              {STATUS_ICONS[b.status]} {STATUS_LABELS[b.status] || b.status}
+              {b.status === 'waitlisted' && b.waitlistPosition && ` (#${b.waitlistPosition})`}
+            </div>
+            {er && EDIT_BADGE[er.status] && (
+              <div
+                className={styles.editBadge}
+                style={{ background:`${EDIT_BADGE[er.status].color}18`, color: EDIT_BADGE[er.status].color, borderColor:`${EDIT_BADGE[er.status].color}40` }}
+                title={er.ownerNote ? `Owner note: ${er.ownerNote}` : undefined}
+              >
+                ✏️ {EDIT_BADGE[er.status].label}
+              </div>
+            )}
           </div>
         </div>
 
@@ -42,19 +164,38 @@ function BookingCard({ b, isOwnerView, onCancel, onConfirm, onReject, actionId }
           <span>📍 {b.venue?.location?.city}</span>
         </div>
 
+        {/* Show pending edit details to user */}
+        {!isOwnerView && er?.status === 'pending' && (
+          <div className={styles.editPendingInfo}>
+            <span>Requested: 📅 {new Date(er.date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })}</span>
+            <span>🕐 {er.startTime} – {er.endTime}</span>
+            <span>👥 {er.guestCount} guests</span>
+            <span>£{er.totalPrice?.toFixed(2)}</span>
+          </div>
+        )}
+
+        {/* Show owner note if edit was reviewed */}
+        {!isOwnerView && er?.ownerNote && ['approved','rejected'].includes(er.status) && (
+          <div className={styles.ownerNote}>Owner note: {er.ownerNote}</div>
+        )}
+
         <div className={styles.bookingFooter}>
           <span className={styles.price}>£{b.totalPrice?.toFixed(2)}</span>
           <div className={styles.actions}>
             <Link to={`/venues/${b.venue?._id}`} className={styles.viewBtn}>View Venue</Link>
 
-            {/* Guest view: can cancel their own active bookings */}
+            {canEdit && (
+              <button className={styles.editBtn} onClick={() => onEdit(b)} disabled={actionId === b._id}>
+                Edit
+              </button>
+            )}
+
             {!isOwnerView && ['confirmed','pending','waitlisted'].includes(b.status) && (
               <button className={styles.cancelBtn} onClick={() => onCancel(b._id)} disabled={actionId === b._id}>
                 {actionId === b._id ? '…' : 'Cancel'}
               </button>
             )}
 
-            {/* Owner view: confirm / reject pending bookings */}
             {isOwnerView && b.status === 'pending' && (
               <>
                 <button className={styles.confirmBtn} onClick={() => onConfirm(b._id)} disabled={actionId === b._id}>
@@ -77,17 +218,18 @@ export default function MyBookingsPage() {
   const { user } = useAuth();
   const isOwner = user?.role === 'venue_owner' || user?.role === 'admin';
 
-  const [bookings, setBookings]   = useState([]);
-  const [loading, setLoading]     = useState(true);
-  const [filter, setFilter]       = useState('');
-  const [actionId, setActionId]   = useState(null);
+  const [bookings, setBookings]     = useState([]);
+  const [loading, setLoading]       = useState(true);
+  const [filter, setFilter]         = useState('');
+  const [actionId, setActionId]     = useState(null);
+  const [editTarget, setEditTarget] = useState(null);
 
   const fetchBookings = useCallback(async () => {
     setLoading(true);
     try {
-      const params = filter ? `?status=${filter}` : '';
+      const params   = filter ? `?status=${filter}` : '';
       const endpoint = isOwner ? `/bookings/owner${params}` : `/bookings/my${params}`;
-      const r = await api.get(endpoint);
+      const r        = await api.get(endpoint);
       setBookings(r.data.bookings || []);
     } catch {
       toast.error('Failed to load bookings');
@@ -131,6 +273,10 @@ export default function MyBookingsPage() {
     } catch (err) {
       toast.error(err.response?.data?.message || 'Could not reject');
     } finally { setActionId(null); }
+  };
+
+  const handleEditSubmitted = (updatedBooking) => {
+    setBookings(bs => bs.map(b => b._id === updatedBooking._id ? updatedBooking : b));
   };
 
   const pendingCount = bookings.filter(b => b.status === 'pending').length;
@@ -178,6 +324,7 @@ export default function MyBookingsPage() {
                   onCancel={handleCancel}
                   onConfirm={handleConfirm}
                   onReject={handleReject}
+                  onEdit={setEditTarget}
                   actionId={actionId}
                 />
               ))}
@@ -185,6 +332,14 @@ export default function MyBookingsPage() {
           )}
         </div>
       </div>
+
+      {editTarget && (
+        <EditModal
+          booking={editTarget}
+          onClose={() => setEditTarget(null)}
+          onSubmitted={handleEditSubmitted}
+        />
+      )}
     </div>
   );
 }

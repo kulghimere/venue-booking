@@ -184,6 +184,93 @@ exports.rejectBooking = async (req, res) => {
   }
 };
 
+exports.requestEditBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id).populate('venue');
+    if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
+    if (booking.user.toString() !== req.user._id.toString())
+      return res.status(403).json({ success: false, message: 'Not authorized' });
+    if (!['pending', 'confirmed'].includes(booking.status))
+      return res.status(400).json({ success: false, message: 'Can only edit pending or confirmed bookings' });
+    if (booking.editRequest?.status === 'pending')
+      return res.status(400).json({ success: false, message: 'An edit request is already pending owner review' });
+
+    const { date, startTime, endTime, guestCount, specialRequests } = req.body;
+    const newDate      = date      ? new Date(date) : booking.date;
+    const newStart     = startTime || booking.startTime;
+    const newEnd       = endTime   || booking.endTime;
+    const newGuests    = guestCount != null ? parseInt(guestCount) : booking.guestCount;
+
+    if (newGuests > booking.venue.capacity)
+      return res.status(400).json({ success: false, message: `Venue capacity is ${booking.venue.capacity}` });
+
+    const conflict = await Booking.findOne({
+      venue: booking.venue._id,
+      _id: { $ne: booking._id },
+      date: newDate,
+      status: 'confirmed',
+      $or: [{ startTime: { $lt: newEnd }, endTime: { $gt: newStart } }]
+    });
+    if (conflict)
+      return res.status(400).json({ success: false, message: 'Requested time slot is not available' });
+
+    const totalHours = calcHours(newStart, newEnd);
+    if (totalHours <= 0)
+      return res.status(400).json({ success: false, message: 'End time must be after start time' });
+
+    booking.editRequest = {
+      status: 'pending',
+      date: newDate,
+      startTime: newStart,
+      endTime: newEnd,
+      guestCount: newGuests,
+      specialRequests: specialRequests !== undefined ? specialRequests : booking.specialRequests,
+      totalHours,
+      totalPrice: totalHours * booking.venue.pricePerHour,
+      requestedAt: new Date()
+    };
+    await booking.save();
+    res.json({ success: true, booking, message: 'Edit request submitted — awaiting owner approval' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.reviewEditRequest = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id).populate('venue');
+    if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
+    if (booking.venue.owner.toString() !== req.user._id.toString() && req.user.role !== 'admin')
+      return res.status(403).json({ success: false, message: 'Not authorized' });
+    if (!booking.editRequest || booking.editRequest.status !== 'pending')
+      return res.status(400).json({ success: false, message: 'No pending edit request on this booking' });
+
+    const { action, ownerNote } = req.body;
+    if (!['approve', 'reject'].includes(action))
+      return res.status(400).json({ success: false, message: 'action must be "approve" or "reject"' });
+
+    if (action === 'approve') {
+      booking.date            = booking.editRequest.date;
+      booking.startTime       = booking.editRequest.startTime;
+      booking.endTime         = booking.editRequest.endTime;
+      booking.guestCount      = booking.editRequest.guestCount;
+      booking.specialRequests = booking.editRequest.specialRequests;
+      booking.totalHours      = booking.editRequest.totalHours;
+      booking.totalPrice      = booking.editRequest.totalPrice;
+    }
+
+    booking.editRequest.status     = action === 'approve' ? 'approved' : 'rejected';
+    booking.editRequest.reviewedAt = new Date();
+    booking.editRequest.ownerNote  = ownerNote || '';
+    await booking.save();
+
+    const msg = action === 'approve' ? 'Edit approved — booking updated' : 'Edit request rejected';
+    res.json({ success: true, booking, message: msg });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 exports.getVenueBookings = async (req, res) => {
   try {
     const venue = await Venue.findById(req.params.venueId);

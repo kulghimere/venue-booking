@@ -1,5 +1,19 @@
 const mongoose = require('mongoose');
 
+const editRequestSchema = new mongoose.Schema({
+  status:         { type: String, enum: ['pending', 'approved', 'rejected'] },
+  date:           Date,
+  startTime:      String,
+  endTime:        String,
+  guestCount:     Number,
+  specialRequests:String,
+  totalHours:     Number,
+  totalPrice:     Number,
+  requestedAt:    Date,
+  reviewedAt:     Date,
+  ownerNote:      String
+}, { _id: false });
+
 const bookingSchema = new mongoose.Schema({
   venue: { type: mongoose.Schema.Types.ObjectId, ref: 'Venue', required: true },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -29,7 +43,8 @@ const bookingSchema = new mongoose.Schema({
   cancelledAt: Date,
   rejectedAt: Date,
   mlScore: { type: Number },
-  notes: String
+  notes: String,
+  editRequest: editRequestSchema
 }, { timestamps: true });
 
 bookingSchema.index({ venue: 1, date: 1, status: 1 });

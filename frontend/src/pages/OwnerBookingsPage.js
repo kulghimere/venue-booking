@@ -17,10 +17,10 @@ const ALL_STATUSES = ['pending', 'confirmed', 'waitlisted', 'cancelled', 'reject
 
 export default function OwnerBookingsPage() {
   const [bookings, setBookings] = useState([]);
-  const [filter, setFilter] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [filter, setFilter]     = useState('');
+  const [loading, setLoading]   = useState(true);
   const [actionId, setActionId] = useState(null);
-  const [search, setSearch] = useState('');
+  const [search, setSearch]     = useState('');
 
   const fetchBookings = useCallback(async () => {
     setLoading(true);
@@ -59,13 +59,36 @@ export default function OwnerBookingsPage() {
     } finally { setActionId(null); }
   };
 
-  // Counts per status for summary badges
+  const handleApproveEdit = async (id) => {
+    setActionId(`edit-${id}`);
+    try {
+      const res = await api.put(`/bookings/${id}/edit-request/review`, { action: 'approve' });
+      setBookings(bs => bs.map(b => b._id === id ? res.data.booking : b));
+      toast.success('Edit approved — booking updated');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Could not approve edit');
+    } finally { setActionId(null); }
+  };
+
+  const handleRejectEdit = async (id) => {
+    if (!window.confirm('Reject this edit request?')) return;
+    setActionId(`edit-${id}`);
+    try {
+      const res = await api.put(`/bookings/${id}/edit-request/review`, { action: 'reject' });
+      setBookings(bs => bs.map(b => b._id === id ? res.data.booking : b));
+      toast.success('Edit request rejected');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Could not reject edit');
+    } finally { setActionId(null); }
+  };
+
   const counts = ALL_STATUSES.reduce((acc, s) => {
     acc[s] = bookings.filter(b => b.status === s).length;
     return acc;
   }, {});
 
-  // Apply status filter + search
+  const pendingEdits = bookings.filter(b => b.editRequest?.status === 'pending').length;
+
   const filtered = bookings.filter(b => {
     const matchStatus = !filter || b.status === filter;
     const q = search.toLowerCase();
@@ -86,7 +109,12 @@ export default function OwnerBookingsPage() {
         <div className={styles.headerInner}>
           <div>
             <h1>All Venue Bookings</h1>
-            <p>{bookings.length} total booking{bookings.length !== 1 ? 's' : ''} across all your venues</p>
+            <p>
+              {bookings.length} total booking{bookings.length !== 1 ? 's' : ''} across all your venues
+              {pendingEdits > 0 && (
+                <span className={styles.editAlertBadge}>✏️ {pendingEdits} edit request{pendingEdits !== 1 ? 's' : ''} pending</span>
+              )}
+            </p>
           </div>
           <Link to="/my-venues" className={styles.venuesBtn}>My Venues</Link>
         </div>
@@ -129,7 +157,6 @@ export default function OwnerBookingsPage() {
                 <button
                   key={s}
                   className={`${styles.tab} ${filter === s ? styles.tabActive : ''}`}
-                  style={filter === s ? {} : {}}
                   onClick={() => setFilter(s)}
                 >
                   {s.charAt(0).toUpperCase() + s.slice(1)} ({counts[s]})
@@ -152,69 +179,113 @@ export default function OwnerBookingsPage() {
                     <th>Guest</th>
                     <th>Venue</th>
                     <th>Event</th>
-                    <th>Date</th>
-                    <th>Time</th>
+                    <th>Date / Time</th>
                     <th>Guests</th>
                     <th>Status</th>
                     <th>Price</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filtered.map(b => (
-                    <tr key={b._id}>
-                      <td>
-                        <div className={styles.guestCell}>
-                          <strong>{b.user?.firstName} {b.user?.lastName}</strong>
-                          <span>{b.user?.email}</span>
-                        </div>
-                      </td>
-                      <td>
-                        <Link to={`/venue-bookings/${b.venue?._id}`} className={styles.venueLink}>
-                          {b.venue?.name}
-                        </Link>
-                      </td>
-                      <td>{b.eventTitle}</td>
-                      <td className={styles.dateCell}>
-                        {new Date(b.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-                      </td>
-                      <td className={styles.time}>{b.startTime} – {b.endTime}</td>
-                      <td>{b.guestCount}</td>
-                      <td>
-                        <span
-                          className={styles.statusBadge}
-                          style={{
-                            background: `${STATUS_COLORS[b.status]}18`,
-                            color: STATUS_COLORS[b.status],
-                            border: `1px solid ${STATUS_COLORS[b.status]}40`,
-                          }}
-                        >
-                          {b.status.charAt(0).toUpperCase() + b.status.slice(1)}
-                        </span>
-                      </td>
-                      <td className={styles.price}>£{b.totalPrice?.toFixed(2)}</td>
-                      <td>
-                        {b.status === 'pending' && (
-                          <div className={styles.actionBtns}>
-                            <button
-                              className={styles.confirmBtn}
-                              disabled={actionId === b._id}
-                              onClick={() => handleConfirm(b._id)}
-                            >
-                              {actionId === b._id ? '…' : 'Confirm'}
-                            </button>
-                            <button
-                              className={styles.rejectBtn}
-                              disabled={actionId === b._id}
-                              onClick={() => handleReject(b._id)}
-                            >
-                              Reject
-                            </button>
+                  {filtered.map(b => {
+                    const er           = b.editRequest;
+                    const hasPendingEdit = er?.status === 'pending';
+                    const isActing     = actionId === b._id || actionId === `edit-${b._id}`;
+
+                    return (
+                      <tr key={b._id} className={hasPendingEdit ? styles.rowWithEdit : ''}>
+                        <td>
+                          <div className={styles.guestCell}>
+                            <strong>{b.user?.firstName} {b.user?.lastName}</strong>
+                            <span>{b.user?.email}</span>
                           </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td>
+                          <Link to={`/venue-bookings/${b.venue?._id}`} className={styles.venueLink}>
+                            {b.venue?.name}
+                          </Link>
+                        </td>
+                        <td>{b.eventTitle}</td>
+                        <td className={styles.dateCell}>
+                          <div>{new Date(b.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+                          <div className={styles.time}>{b.startTime} – {b.endTime}</div>
+                        </td>
+                        <td>{b.guestCount}</td>
+                        <td>
+                          <span
+                            className={styles.statusBadge}
+                            style={{
+                              background: `${STATUS_COLORS[b.status]}18`,
+                              color: STATUS_COLORS[b.status],
+                              border: `1px solid ${STATUS_COLORS[b.status]}40`,
+                            }}
+                          >
+                            {b.status.charAt(0).toUpperCase() + b.status.slice(1)}
+                          </span>
+                        </td>
+                        <td className={styles.price}>£{b.totalPrice?.toFixed(2)}</td>
+                        <td>
+                          <div className={styles.actionCell}>
+                            {/* Booking confirm/reject */}
+                            {b.status === 'pending' && (
+                              <div className={styles.actionBtns}>
+                                <button
+                                  className={styles.confirmBtn}
+                                  disabled={isActing}
+                                  onClick={() => handleConfirm(b._id)}
+                                >
+                                  {actionId === b._id ? '…' : 'Confirm'}
+                                </button>
+                                <button
+                                  className={styles.rejectBtn}
+                                  disabled={isActing}
+                                  onClick={() => handleReject(b._id)}
+                                >
+                                  Reject
+                                </button>
+                              </div>
+                            )}
+
+                            {/* Edit request section */}
+                            {hasPendingEdit && (
+                              <div className={styles.editRequestBox}>
+                                <div className={styles.editRequestTitle}>✏️ Edit Request</div>
+                                <div className={styles.editRequestDetails}>
+                                  <span>📅 {new Date(er.date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })}</span>
+                                  <span>🕐 {er.startTime} – {er.endTime}</span>
+                                  <span>👥 {er.guestCount}</span>
+                                  <span>£{er.totalPrice?.toFixed(2)}</span>
+                                </div>
+                                <div className={styles.editActionBtns}>
+                                  <button
+                                    className={styles.approveEditBtn}
+                                    disabled={isActing}
+                                    onClick={() => handleApproveEdit(b._id)}
+                                  >
+                                    {actionId === `edit-${b._id}` ? '…' : 'Approve'}
+                                  </button>
+                                  <button
+                                    className={styles.rejectEditBtn}
+                                    disabled={isActing}
+                                    onClick={() => handleRejectEdit(b._id)}
+                                  >
+                                    Decline
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Show resolved edit request status */}
+                            {er && !hasPendingEdit && (
+                              <span className={styles.editResolved} style={{ color: er.status === 'approved' ? '#00c896' : '#e94560' }}>
+                                {er.status === 'approved' ? '✓ Edit approved' : '✗ Edit declined'}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
