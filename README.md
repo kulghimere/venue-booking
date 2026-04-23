@@ -11,7 +11,7 @@
 VenueBook is a full-stack intelligent web application for venue booking and scheduling. It incorporates:
 
 - **Real-time availability management** with automated conflict detection
-- **ML-inspired recommendation engine** scoring venues against user preferences and history
+- **Recommendation engine** scoring venues against user preferences and history
 - **Smart waitlisting** — automatically promotes users when slots open
 - **Demand forecasting** — predicts peak booking periods
 - **Role-based access** for Users, Venue Owners, and Admins
@@ -107,17 +107,7 @@ net start MongoDB
 npm run seed
 ```
 
-This creates demo venues, users, and sample bookings.
 
-**Demo accounts created:**
-
-| Role         | Email                    | Password     |
-|-------------|--------------------------|--------------|
-| Admin        | admin@venuebook.com      | password123  |
-| Venue Owner  | sarah@venuebook.com      | password123  |
-| Venue Owner  | james@venuebook.com      | password123  |
-| User         | kul@example.com          | password123  |
-| User         | emily@example.com        | password123  |
 
 ### Step 5 — Start the application
 
@@ -270,7 +260,7 @@ All endpoints are prefixed with `/api`.
 
 ---
 
-## ML Recommendation System
+## Recommendation System
 
 The recommendation engine in `recommendationController.js` implements a weighted multi-factor scoring model:
 
